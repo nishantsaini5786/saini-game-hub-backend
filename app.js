@@ -23,11 +23,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// ✅ CORS updated for frontend + credentials
 app.use(
   cors({
-    origin: [
-      "sainigamehub-db.netlify.app" // 🔴 yahan apna netlify URL daalna
-    ],
+    origin: "https://sainigamehub-db.netlify.app", // full frontend URL with HTTPS
     credentials: true
   })
 );
@@ -122,10 +121,16 @@ app.post("/register", async (req, res) => {
       password: hashed
     });
 
+    // ✅ Cookie updated for cross-origin
     res.cookie(
       "user",
       JSON.stringify({ id: user._id, username: user.username }),
-      { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }
+      {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+        secure: true, // HTTPS required
+        sameSite: "none" // cross-origin allowed
+      }
     );
 
     res.json({ success: true, message: "Registered successfully" });
@@ -148,10 +153,16 @@ app.post("/login", async (req, res) => {
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ error: "Wrong password" });
 
+    // ✅ Cookie updated for cross-origin
     res.cookie(
       "user",
       JSON.stringify({ id: user._id, username: user.username }),
-      { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }
+      {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+        secure: true,
+        sameSite: "none"
+      }
     );
 
     res.json({ success: true, message: "Login successful" });
@@ -199,7 +210,7 @@ app.post("/upload-profile", upload.single("profileImage"), async (req, res) => {
 // 1️⃣2️⃣ Logout
 // ======================
 app.get("/logout", (req, res) => {
-  res.clearCookie("user");
+  res.clearCookie("user", { secure: true, sameSite: "none" });
   res.json({ success: true });
 });
 
