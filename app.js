@@ -23,13 +23,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// ✅ CORS updated for frontend + credentials
-app.use(
-  cors({
-    origin: "https://sainigamehub-db.netlify.app", // full frontend URL with HTTPS
-    credentials: true
-  })
-);
+// ✅✅ FINAL CORS FIX (MOST IMPORTANT)
+const corsOptions = {
+  origin: "https://sainigamehub-db.netlify.app",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // 🔥 preflight fix
 
 // ======================
 // 3️⃣ Root test route
@@ -85,7 +88,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// serve uploads
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ======================
@@ -121,21 +123,19 @@ app.post("/register", async (req, res) => {
       password: hashed
     });
 
-    // ✅ Cookie updated for cross-origin
     res.cookie(
       "user",
       JSON.stringify({ id: user._id, username: user.username }),
       {
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,
-        secure: true, // HTTPS required
-        sameSite: "none" // cross-origin allowed
+        secure: true,
+        sameSite: "none",
+        maxAge: 24 * 60 * 60 * 1000
       }
     );
 
-    res.json({ success: true, message: "Registered successfully" });
+    res.json({ success: true });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: "Server error" });
   }
 });
@@ -153,20 +153,19 @@ app.post("/login", async (req, res) => {
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).json({ error: "Wrong password" });
 
-    // ✅ Cookie updated for cross-origin
     res.cookie(
       "user",
       JSON.stringify({ id: user._id, username: user.username }),
       {
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,
         secure: true,
-        sameSite: "none"
+        sameSite: "none",
+        maxAge: 24 * 60 * 60 * 1000
       }
     );
 
-    res.json({ success: true, message: "Login successful" });
-  } catch (err) {
+    res.json({ success: true });
+  } catch {
     res.status(500).json({ error: "Server error" });
   }
 });
@@ -181,37 +180,6 @@ app.get("/check", (req, res) => {
   } catch {
     res.json({ loggedIn: false });
   }
-});
-
-// ======================
-// 1️⃣1️⃣ Upload profile image
-// ======================
-app.post("/upload-profile", upload.single("profileImage"), async (req, res) => {
-  try {
-    const cookie = req.cookies.user;
-    if (!cookie) return res.status(401).json({ error: "Not logged in" });
-
-    const { id } = JSON.parse(cookie);
-    const user = await User.findById(id);
-
-    user.profileImage = req.file.filename;
-    await user.save();
-
-    res.json({
-      success: true,
-      imageUrl: `/uploads/profiles/${req.file.filename}`
-    });
-  } catch (err) {
-    res.status(500).json({ error: "Upload failed" });
-  }
-});
-
-// ======================
-// 1️⃣2️⃣ Logout
-// ======================
-app.get("/logout", (req, res) => {
-  res.clearCookie("user", { secure: true, sameSite: "none" });
-  res.json({ success: true });
 });
 
 // ======================
