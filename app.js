@@ -23,26 +23,45 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// ✅✅ FINAL CORS FIX (MOST IMPORTANT)
-const corsOptions = {
-  origin: "https://sainigamehub-db.netlify.app",
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-};
-
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // 🔥 preflight fix
+// 🔥 REQUIRED FOR RENDER / COOKIES
+app.set("trust proxy", 1);
 
 // ======================
-// 3️⃣ Root test route
+// ✅ FINAL CORS (NO ERROR)
+// ======================
+const FRONTEND_URL = "https://sainigamehub-db.netlify.app";
+
+app.use(
+  cors({
+    origin: FRONTEND_URL,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+  })
+);
+
+// ✅ Manual preflight (NO path-to-regexp error)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", FRONTEND_URL);
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
+// ======================
+// 3️⃣ Test route
 // ======================
 app.get("/", (req, res) => {
   res.send("Backend is running 🚀");
 });
 
 // ======================
-// 4️⃣ MongoDB Atlas connection
+// 4️⃣ MongoDB connection
 // ======================
 mongoose
   .connect(process.env.MONGODB_URI)
@@ -72,7 +91,7 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 
 // ======================
-// 7️⃣ Multer (uploads)
+// 7️⃣ Multer (profile upload)
 // ======================
 const uploadDir = path.join(__dirname, "uploads/profiles");
 
@@ -134,8 +153,9 @@ app.post("/register", async (req, res) => {
       }
     );
 
-    res.json({ success: true });
+    res.json({ success: true, message: "Registered successfully" });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Server error" });
   }
 });
@@ -164,8 +184,8 @@ app.post("/login", async (req, res) => {
       }
     );
 
-    res.json({ success: true });
-  } catch {
+    res.json({ success: true, message: "Login successful" });
+  } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
 });
