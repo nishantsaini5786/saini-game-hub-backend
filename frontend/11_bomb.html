@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <title>Bomb Finder - 11 Bombs</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('bg.jpg') center/cover fixed no-repeat;
+      background-size: cover;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      animation: waveBG 15s infinite linear;
+    }
+
+    @keyframes waveBG {
+      0% { background-position: 50% 50%; }
+      50% { background-position: 48% 52%; }
+      100% { background-position: 50% 50%; }
+    }
+
+    h1 {
+      margin: 40px 0 10px;
+      font-size: 2.8em;
+      color: #ff4d4d;
+      text-shadow: 0 0 15px red;
+      animation: shake 1.5s infinite;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-3px); }
+      50% { transform: translateX(3px); }
+      75% { transform: translateX(-3px); }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 60px);
+      gap: 15px;
+      margin: 30px auto;
+    }
+
+    .cell {
+      width: 60px;
+      height: 60px;
+      background-color: #333;
+      border-radius: 10px;
+      font-size: 1.5em;
+      line-height: 60px;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .cell:hover {
+      background-color: #555;
+    }
+
+    .cell.clicked {
+      background-color: #00cc66;
+    }
+
+    .cell.bomb {
+      background-color: red;
+      color: white;
+      animation: boom 0.4s ease-in-out;
+    }
+
+    @keyframes boom {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.4); }
+      100% { transform: scale(1); }
+    }
+
+    .message {
+      font-size: 1.4em;
+      margin-top: 20px;
+      color: yellow;
+      min-height: 40px;
+    }
+
+    .btns {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btns button,
+    .btns a {
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #ff4d4d;
+      color: white;
+      transition: 0.3s;
+      text-decoration: none;
+    }
+
+    .btns button:hover,
+    .btns a:hover {
+      background-color: white;
+      color: red;
+    }
+
+    footer {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      font-size: 1em;
+      border-top: 5px double red;
+      margin-top: auto;
+      width: 100%;
+      text-align: center;
+      color: #ffcccc;
+    }
+
+    footer a {
+      color: #ffaaaa;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: white;
+    }
+
+    @media screen and (max-width: 600px) {
+      h1 {
+        font-size: 2em;
+      }
+
+      .grid {
+        grid-template-columns: repeat(5, 50px);
+        gap: 12px;
+      }
+
+      .cell {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2em;
+        line-height: 50px;
+      }
+
+      .btns button,
+      .btns a {
+        font-size: 0.9em;
+        padding: 8px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>💣 Bomb Finder - 11 Bombs</h1>
+
+  <div class="grid" id="grid"></div>
+  <div class="message" id="message">Click on boxes to find safe spots!</div>
+
+  <div class="btns">
+    <button onclick="resetGame()">🔁 Play Again</button>
+    <a href="2_index.html">🏠 Go to Home</a>
+    <a href="bomb_level.html">🎮 Go to Level Page</a>
+  </div>
+
+  <footer>
+    <p>Created by Nishant Saini |
+      <a href="https://www.instagram.com/nishantt_sainii/?hl=en" target="_blank">Instagram</a> |
+      <a href="https://www.linkedin.com/in/nishant-saini-6a695b322/" target="_blank">LinkedIn</a> |
+      <a href="tel:+919625700719">📞 9625700719</a>
+    </p>
+    <p>&copy; 2025 Saini Games Hub</p>
+  </footer>
+
+  <script>
+    const totalCells = 25;
+    const bombCount = 11;
+    let bombPositions = [];
+    let revealed = new Set();
+    let gameOver = false;
+
+    function generateBombs() {
+      bombPositions = [];
+      while (bombPositions.length < bombCount) {
+        let pos = Math.floor(Math.random() * totalCells);
+        if (!bombPositions.includes(pos)) {
+          bombPositions.push(pos);
+        }
+      }
+    }
+
+    function createGrid() {
+      const grid = document.getElementById('grid');
+      grid.innerHTML = "";
+      for (let i = 0; i < totalCells; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.index = i;
+        cell.onclick = () => handleClick(cell, i);
+        grid.appendChild(cell);
+      }
+    }
+
+    function handleClick(cell, index) {
+      if (gameOver || revealed.has(index)) return;
+
+      if (bombPositions.includes(index)) {
+        cell.classList.add('bomb');
+        cell.textContent = '💣';
+        document.getElementById('message').textContent = '💥 Boom! You clicked a bomb!';
+        gameOver = true;
+        setTimeout(() => revealAllBombs(), 300);
+      } else {
+        cell.classList.add('clicked');
+        cell.textContent = '✅';
+        revealed.add(index);
+
+        if (revealed.size === totalCells - bombCount) {
+          document.getElementById('message').textContent = '🎉 Congratulations! You avoided all bombs!';
+          gameOver = true;
+          revealAllBombs();
+        }
+      }
+    }
+
+    function revealAllBombs() {
+      const cells = document.querySelectorAll('.cell');
+      bombPositions.forEach(pos => {
+        const cell = cells[pos];
+        if (!cell.classList.contains('bomb')) {
+          cell.classList.add('bomb');
+          cell.textContent = '💣';
+        }
+      });
+    }
+
+    function resetGame() {
+      revealed.clear();
+      gameOver = false;
+      document.getElementById('message').textContent = 'Click on boxes to find safe spots!';
+      generateBombs();
+      createGrid();
+    }
+
+    generateBombs();
+    createGrid();
+  </script>
+</body>
+</html>

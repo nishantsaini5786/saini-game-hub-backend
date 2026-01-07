@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <title>Maths Game - Saini Games Hub</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('bg.jpg') center/cover fixed no-repeat;
+      color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      text-align: center;
+      animation: waveBG 15s infinite linear;
+      background-size: 110%;
+    }
+
+    @keyframes waveBG {
+      0% { background-position: 50% 50%; }
+      50% { background-position: 48% 52%; }
+      100% { background-position: 50% 50%; }
+    }
+
+    header {
+      padding: 60px 20px 10px;
+    }
+
+    .animated-title {
+      font-size: 3.5em;
+      color: #00ccff;
+      text-shadow: 0 0 15px #0033ff, 0 0 25px #00ccff;
+      animation: slideDown 2s ease-out, fadeIn 1.5s ease-in;
+    }
+
+    @keyframes slideDown {
+      0% { transform: translateY(-50px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px 40px;
+    }
+
+    .game-title, .game-desc, .play-button {
+      animation: fadeInUp 1s ease forwards;
+      opacity: 0;
+    }
+
+    .game-title {
+      font-size: 2.8em;
+      color: #a7e4ff;
+      margin-bottom: 20px;
+      animation-delay: 0.3s;
+    }
+
+    .game-desc {
+      font-size: 1.4em;
+      color: #d9f4ff;
+      max-width: 600px;
+      margin-bottom: 40px;
+      animation-delay: 0.6s;
+    }
+
+    .play-button {
+      background-color: #00ccff;
+      color: black;
+      padding: 15px 35px;
+      font-size: 1.5em;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      text-decoration: none;
+      animation-delay: 0.9s;
+    }
+
+    .play-button:hover {
+      background-color: #99f4ff;
+      box-shadow: 0 0 15px white;
+    }
+
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    .back-btn {
+      margin-top: 50px;
+      animation: fadeInUp 1s ease forwards;
+      animation-delay: 1.2s;
+      opacity: 0;
+    }
+
+    .back-btn a {
+      display: inline-block;
+      background-color: #004466;
+      color: white;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .back-btn a:hover {
+      background-color: #00ccff;
+      color: black;
+      box-shadow: 0 0 10px #00ccff;
+    }
+
+    footer {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 30px 20px;
+      font-size: 1.3em;
+      border-top: 5px double #00ccff;
+      color: #baffff;
+      text-align: center;
+    }
+
+    footer a {
+      color: #a3ffff;
+      margin: 0 10px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    footer a:hover {
+      color: white;
+    }
+
+    @media screen and (max-width: 600px) {
+      .animated-title { font-size: 2.4em; }
+      .game-title { font-size: 2em; }
+      .play-button { font-size: 1.2em; padding: 10px 25px; }
+      footer { font-size: 1em; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 🔊 Hover Sound -->
+  <audio id="hoverSound" src="hover.mp3" preload="auto"></audio>
+
+  <header>
+    <h1 class="animated-title">➕ MATHS MASTER</h1>
+  </header>
+
+  <main>
+    <h2 class="game-title">Add, Subtract, Multiply — Train Your Brain</h2>
+    <p class="game-desc">
+      Challenge yourself with math puzzles! Great for all ages to boost mental skills.
+    </p>
+    <a href="maths_choice.html" class="play-button">🧠 Start Solving</a>
+
+    <div class="back-btn">
+      <a href="2_index.html">⬅️ Back to Home Page</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Created by Nishant Saini |
+      <a href="https://www.instagram.com/nishantt_sainii/?hl=en" target="_blank">Instagram</a> |
+      <a href="https://www.linkedin.com/in/nishant-saini-6a695b322/" target="_blank">LinkedIn</a> |
+      <a href="tel:+919625700719">📞 9625700719</a>
+    </p>
+    <p>&copy; 2025 Saini Games Hub</p>
+  </footer>
+
+  <script>
+    const sound = document.getElementById("hoverSound");
+    document.querySelectorAll('.play-button, .back-btn a').forEach(btn => {
+      btn.addEventListener('mouseenter', () => {
+        sound.currentTime = 0;
+        sound.play();
+      });
+    });
+  </script>
+</body>
+</html>

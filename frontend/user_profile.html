@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Profile | Saini Games Hub</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease-out;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header में से buttons हटा दिए */
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            animation: slideInDown 0.6s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Bottom buttons container */
+        .bottom-buttons {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            z-index: 1000;
+            padding: 0 20px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            min-width: 160px;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            box-shadow: 0 4px 15px rgba(238, 90, 82, 0.4);
+        }
+
+        .back-btn:hover {
+            box-shadow: 0 6px 20px rgba(238, 90, 82, 0.6);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #36d1dc, #5b86e5);
+            box-shadow: 0 4px 15px rgba(91, 134, 229, 0.4);
+        }
+
+        .logout-btn:hover {
+            box-shadow: 0 6px 20px rgba(91, 134, 229, 0.6);
+        }
+
+        .profile-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 100px; /* Extra space for bottom buttons */
+            backdrop-filter: blur(10px);
+            animation: scaleIn 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) rotate(45deg);
+            }
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-pic-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .profile-pic {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.05);
+            border-color: #667eea;
+        }
+
+        .upload-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .upload-btn:hover {
+            background: #764ba2;
+            transform: rotate(180deg) scale(1.1);
+        }
+
+        #imageInput {
+            display: none;
+        }
+
+        .profile-name {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .profile-username {
+            font-size: 20px;
+            color: #b0b0ff;
+            margin-bottom: 5px;
+        }
+
+        .profile-email {
+            font-size: 18px;
+            color: #90caf9;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .detail-card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 25px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .detail-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #667eea;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .detail-label {
+            font-size: 14px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .detail-value {
+            font-size: 18px;
+            font-weight: 500;
+            word-break: break-all;
+        }
+
+        .password-field {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .password-value {
+            font-size: 18px;
+            letter-spacing: 2px;
+            color: #ddd;
+        }
+
+        .edit-icon {
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .edit-icon:hover {
+            color: #ff6b6b;
+            transform: scale(1.2);
+        }
+
+        .edit-form {
+            display: none;
+            margin-top: 15px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #aaa;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .cancel-btn {
+            background: linear-gradient(135deg, #f44336, #c62828);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+        }
+
+        .password-edit-form {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            background: #4CAF50;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateX(150%);
+            transition: transform 0.5s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: #f44336;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 20px;
+            color: #aaa;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .bottom-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+                bottom: 10px;
+            }
+            
+            .action-btn {
+                width: 90%;
+                min-width: unset;
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .header {
+                margin-top: 20px;
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .profile-pic {
+                width: 140px;
+                height: 140px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <!-- ⚠️ TERA PURE CSS AS IT IS — MAINE TOUCH NAHI KIYA -->
+    <!-- (same CSS jo tune bheja tha) -->
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>My Profile</h1>
+    </div>
+
+    <div class="profile-card">
+
+        <div class="profile-header">
+            <div class="profile-pic-container">
+                <img id="profilePic" class="profile-pic" />
+                <button class="upload-btn" id="uploadBtn"><i class="fas fa-camera"></i></button>
+                <input type="file" id="imageInput" accept="image/*" hidden />
+            </div>
+
+            <h2 class="profile-name" id="profileName">Loading...</h2>
+            <p class="profile-username" id="profileUsername"></p>
+            <p class="profile-email" id="profileEmail"></p>
+        </div>
+
+        <div id="loadingState" class="loading">
+            <div class="loading-spinner"></div>
+            Loading profile data...
+        </div>
+
+        <div id="detailsGrid" class="details-grid" style="display:none;">
+
+            <div class="detail-card">
+                <div class="detail-label">Full Name <i class="fas fa-edit edit-icon" onclick="toggleEdit('name')"></i></div>
+                <div class="detail-value" id="nameValue"></div>
+                <div class="edit-form" id="nameEditForm">
+                    <input id="nameInput" />
+                    <button onclick="saveChange('name')">Save</button>
+                </div>
+            </div>
+
+            <div class="detail-card">
+                <div class="detail-label">Username <i class="fas fa-edit edit-icon" onclick="toggleEdit('username')"></i></div>
+                <div class="detail-value" id="usernameValue"></div>
+                <div class="edit-form" id="usernameEditForm">
+                    <input id="usernameInput" />
+                    <button onclick="saveChange('username')">Save</button>
+                </div>
+            </div>
+
+            <div class="detail-card">
+                <div class="detail-label">Email</div>
+                <div class="detail-value" id="emailValue"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="bottom-buttons">
+        <button id="backBtn">⬅ Back</button>
+        <button id="logoutBtn">🚪 Logout</button>
+    </div>
+
+    <div id="notification" class="notification"></div>
+</div>
+
+<script>
+/* ================= BACKEND CONFIG ================= */
+const BACKEND_URL = "https://saini-game-hub-backend.onrender.com";
+let userData = {};
+
+/* ================= AUTH CHECK ================= */
+document.addEventListener("DOMContentLoaded", checkAuth);
+
+async function checkAuth() {
+    try {
+        const res = await fetch(`${BACKEND_URL}/main-auth`, {
+            credentials: "include"
+        });
+        const data = await res.json();
+
+        if (!data.loggedIn) {
+            window.location.href = "login.html";
+        } else {
+            loadProfile();
+        }
+    } catch (err) {
+        console.error(err);
+        window.location.href = "login.html";
+    }
+}
+
+/* ================= LOAD PROFILE ================= */
+async function loadProfile() {
+    const res = await fetch(`${BACKEND_URL}/profile`, {
+        credentials: "include"
+    });
+    const data = await res.json();
+
+    if (data.success) {
+        userData = data.user;
+        showProfile();
+    }
+}
+
+function showProfile() {
+    document.getElementById("loadingState").style.display = "none";
+    document.getElementById("detailsGrid").style.display = "grid";
+
+    profileName.textContent = userData.name;
+    profileUsername.textContent = "@" + userData.username;
+    profileEmail.textContent = userData.email;
+
+    nameValue.textContent = userData.name;
+    usernameValue.textContent = "@" + userData.username;
+    emailValue.textContent = userData.email;
+
+    nameInput.value = userData.name;
+    usernameInput.value = userData.username;
+
+    profilePic.src = userData.profileImage
+        ? userData.profileImage
+        : `https://via.placeholder.com/180/667eea/fff?text=${userData.name[0]}`;
+}
+
+/* ================= EDIT ================= */
+function toggleEdit(field) {
+    document.getElementById(field + "EditForm").classList.toggle("show");
+}
+
+async function saveChange(field) {
+    const value = document.getElementById(field + "Input").value;
+
+    const res = await fetch(`${BACKEND_URL}/update-profile`, {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ [field]: value })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+        location.reload();
+    }
+}
+
+/* ================= IMAGE UPLOAD ================= */
+uploadBtn.onclick = () => imageInput.click();
+
+imageInput.onchange = async () => {
+    const formData = new FormData();
+    formData.append("profileImage", imageInput.files[0]);
+
+    await fetch(`${BACKEND_URL}/upload-profile`, {
+        method: "POST",
+        credentials: "include",
+        body: formData
+    });
+
+    location.reload();
+};
+
+/* ================= LOGOUT ================= */
+logoutBtn.onclick = async () => {
+    await fetch(`${BACKEND_URL}/logout`, {
+        credentials: "include"
+    });
+    window.location.href = "login.html";
+};
+
+backBtn.onclick = () => window.location.href = "2_index.html";
+</script>
+
+</body>
+</html>

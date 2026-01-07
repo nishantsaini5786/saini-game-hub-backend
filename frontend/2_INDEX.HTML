@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Saini Games Hub</title>
+
+  <link rel="stylesheet" href="index.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="logo.png" />
+</head>
+
+<body>
+  <div class="page-wrapper">
+
+    <!-- Logout Button -->
+    <button class="logout-btn" id="logoutBtn">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </button>
+
+    <!-- Welcome -->
+    <div class="welcome-message">
+      Welcome, <span id="userName">Player</span> 🎮
+    </div>
+
+    <!-- Profile -->
+    <div class="profile-section">
+      <button class="profile-btn" id="profileBtn">
+        <i class="fas fa-user-circle"></i>
+        <span id="usernameDisplay">Profile</span>
+      </button>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+      <h1 class="animated-title">SAINI GAMES HUB</h1>
+    </header>
+
+    <!-- GAMES -->
+    <main>
+      <div class="games-grid">
+        <a href="xoxo.html" class="game-box">❌⭕ XOXO</a>
+        <a href="water.html" class="game-box">🧪 WATER SORT</a>
+        <a href="block.html" class="game-box">🧱 BLOCK BLAST</a>
+        <a href="maths.html" class="game-box">➕ MATHS ➕</a>
+        <a href="bomb.html" class="game-box">🧨 BOMB FINDER</a>
+        <a href="sps.html" class="game-box">✊✋✌️ S P S</a>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>
+        Created by Nishant Saini |
+        <a href="https://www.instagram.com/nishantt_sainii/?hl=en" target="_blank">Instagram</a> |
+        <a href="https://www.linkedin.com/in/nishant-saini-6a695b322/" target="_blank">LinkedIn</a> |
+        <a href="tel:+919625700719">📞 9625700719</a>
+      </p>
+      <p>&copy; 2025 Saini_Zone</p>
+    </footer>
+
+  </div>
+
+<script>
+const BACKEND_URL = "https://saini-game-hub-backend.onrender.com";
+
+/* ================= AUTH CHECK ================= */
+document.addEventListener("DOMContentLoaded", checkAuth);
+
+async function checkAuth() {
+  try {
+    const res = await fetch(`${BACKEND_URL}/main-auth`, {
+      credentials: "include"
+    });
+
+    if (!res.ok) throw new Error("Auth failed");
+
+    const data = await res.json();
+
+    if (!data.loggedIn) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    // show user info
+    document.getElementById("userName").textContent =
+      data.user.name || data.user.username;
+
+    document.getElementById("usernameDisplay").textContent =
+      data.user.username;
+
+  } catch (err) {
+    console.error(err);
+    window.location.href = "login.html";
+  }
+}
+
+/* ================= LOGOUT ================= */
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  try {
+    await fetch(`${BACKEND_URL}/logout`, { credentials: "include" });
+  } finally {
+    window.location.href = "login.html";
+  }
+});
+
+/* ================= PROFILE ================= */
+document.getElementById("profileBtn").addEventListener("click", () => {
+  window.location.href = "user_profile.html";
+});
+
+/* ================= AUTO LOGOUT (30 MIN) ================= */
+let timer;
+function resetTimer() {
+  clearTimeout(timer);
+  timer = setTimeout(async () => {
+    await fetch(`${BACKEND_URL}/logout`, { credentials: "include" });
+    alert("Session expired. Login again.");
+    window.location.href = "login.html";
+  }, 30 * 60 * 1000);
+}
+
+["mousemove","keydown","click","scroll"].forEach(e =>
+  document.addEventListener(e, resetTimer)
+);
+resetTimer();
+
+/* ================= GAME CLICK EFFECT ================= */
+document.querySelectorAll(".game-box").forEach(box => {
+  box.addEventListener("click", () => {
+    box.style.transform = "scale(0.95)";
+    setTimeout(() => box.style.transform = "scale(1)", 200);
+  });
+});
+</script>
+
+</body>
+</html>

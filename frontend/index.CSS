@@ -1,0 +1,130 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: url('bg.jpg') center/cover fixed no-repeat;
+  animation: waveBG 15s infinite linear;
+  background-size: 110%;
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes waveBG {
+  0% { background-position: 50% 50%; }
+  50% { background-position: 48% 52%; }
+  100% { background-position: 50% 50%; }
+}
+
+/* PAGE WRAPPER to keep footer at bottom */
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+header {
+  padding: 40px 20px 10px;
+  text-align: center;
+}
+
+.animated-title {
+  font-size: 3.6em;
+  font-weight: bold;
+  background: linear-gradient(45deg, #ff00cc, #eb02fc, #00ffff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shine 5s infinite linear;
+}
+
+@keyframes shine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* MAIN */
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.game-box {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid #00f0ff;
+  padding: 25px;
+  border-radius: 18px;
+  font-size: 1.4em;
+  color: #ffffff;
+  text-decoration: none;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 10px #00f0ff50;
+  transition: 0.3s ease;
+  text-align: center;
+}
+
+.game-box:hover {
+  background-color: #00f0ff;
+  color: #111;
+  transform: scale(1.1);
+  box-shadow: 0 0 20px #00f0ff, 0 0 40px #00f0ff88;
+}
+
+/* FOOTER */
+footer {
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 30px 20px;
+  font-size: 1.2em;
+  border-top: 4px solid #ff00cc;
+  color: #ffccff;
+  text-align: center;
+}
+
+footer a {
+  color: #ff66ff;
+  margin: 0 10px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+footer a:hover {
+  color: cyan;
+  text-shadow: 0 0 5px white;
+}
+
+/* RESPONSIVE DESIGN */
+@media screen and (max-width: 600px) {
+  .animated-title {
+    font-size: 2.4em;
+  }
+
+  .game-box {
+    font-size: 1.1em;
+    padding: 20px;
+  }
+
+  footer {
+    font-size: 1em;
+  }
+}

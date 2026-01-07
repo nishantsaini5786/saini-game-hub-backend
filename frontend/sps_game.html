@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/png" href="logo.png" />
+
+  <title>Rock Paper Scissors - Play Game</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('bg.jpg') center/cover fixed no-repeat;
+      animation: waveBG 15s infinite linear;
+      background-size: 110%;
+      color: white;
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @keyframes waveBG {
+      0% { background-position: 50% 50%; }
+      50% { background-position: 48% 52%; }
+      100% { background-position: 50% 50%; }
+    }
+
+    header {
+      padding: 40px 20px 10px;
+    }
+
+    h1 {
+      font-size: 3em;
+      color: #ffe600;
+      text-shadow: 0 0 15px #ffe600;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    main {
+      flex: 1;
+      padding-bottom: 30px;
+    }
+
+    .choices {
+      margin: 30px 0;
+    }
+
+    .choice {
+      font-size: 2em;
+      margin: 0 20px;
+      padding: 15px 30px;
+      border: 2px solid #fff;
+      border-radius: 12px;
+      cursor: pointer;
+      display: inline-block;
+      transition: 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .choice:hover {
+      background-color: #ffe600;
+      color: #111;
+      transform: scale(1.1);
+      box-shadow: 0 0 15px #ffe600;
+    }
+
+    #result {
+      font-size: 1.8em;
+      margin-top: 30px;
+      min-height: 60px;
+    }
+
+    #player-choice, #computer-choice {
+      font-size: 1.2em;
+      margin-top: 15px;
+    }
+
+    #reset {
+      margin-top: 30px;
+      padding: 10px 25px;
+      font-size: 1em;
+      background-color: #ffe600;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    #reset:hover {
+      background-color: #fff200;
+    }
+
+    .summary {
+      margin-top: 30px;
+      font-size: 1.2em;
+      color: #0ff;
+      margin-bottom: 30px;
+    }
+
+    .home-btn {
+      margin-top: 15px;
+      display: inline-block;
+      padding: 10px 25px;
+      font-size: 1em;
+      background-color: #222;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .home-btn:hover {
+      background-color: #ffcc00;
+      color: black;
+      box-shadow: 0 0 10px #ffcc00;
+    }
+
+    footer {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 30px 20px;
+      font-size: 1em;
+      border-top: 5px double #ffcc00;
+      color: #fff2c2;
+      text-align: center;
+    }
+
+    footer a {
+      color: #ffccaa;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: white;
+    }
+
+    @media screen and (max-width: 600px) {
+      h1 {
+        font-size: 2em;
+      }
+      .choice {
+        font-size: 1.4em;
+        padding: 12px 20px;
+        margin: 10px;
+      }
+      .home-btn {
+        font-size: 0.9em;
+        padding: 8px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🎮 Rock Paper Scissors</h1>
+  </header>
+
+  <main>
+    <div class="choices">
+      <div class="choice" onclick="playGame('rock')">🪨 Rock</div>
+      <div class="choice" onclick="playGame('paper')">📄 Paper</div>
+      <div class="choice" onclick="playGame('scissors')">✂️ Scissors</div>
+    </div>
+
+    <div id="result">Let's Play!</div>
+    <div id="player-choice"></div>
+    <div id="computer-choice"></div>
+    <div class="summary" id="summary"></div>
+
+    <button id="reset" onclick="resetGame()">🔄 Play Again</button><br>
+    <a href="2_index.html" class="home-btn">🏠 Go to Home Page</a>
+  </main>
+
+  <footer>
+    <p>Created by Nishant Saini |
+      <a href="https://www.instagram.com/nishantt_sainii/?hl=en" target="_blank">Instagram</a> |
+      <a href="https://www.linkedin.com/in/nishant-saini-6a695b322/" target="_blank">LinkedIn</a> |
+      <a href="tel:+919625700719">📞 9625700719</a>
+    </p>
+    <p>&copy; 2025 Saini Games Hub</p>
+  </footer>
+
+  <!-- Sounds -->
+  <audio id="winSound" src="https://www.soundjay.com/button/sounds/button-3.mp3"></audio>
+  <audio id="loseSound" src="https://www.soundjay.com/button/sounds/button-10.mp3"></audio>
+
+  <script>
+    const resultDiv = document.getElementById("result");
+    const playerChoiceDiv = document.getElementById("player-choice");
+    const computerChoiceDiv = document.getElementById("computer-choice");
+    const summaryDiv = document.getElementById("summary");
+
+    const winSound = document.getElementById("winSound");
+    const loseSound = document.getElementById("loseSound");
+
+    let userWins = 0;
+    let computerWins = 0;
+    let draws = 0;
+    let rounds = 0;
+    const maxRounds = 10;
+
+    function playGame(playerChoice) {
+      if (rounds >= maxRounds) {
+        resultDiv.innerHTML = "Game Over! Click Play Again.";
+        return;
+      }
+
+      const choices = ["rock", "paper", "scissors"];
+      const emojis = {
+        rock: "🪨",
+        paper: "📄",
+        scissors: "✂️"
+      };
+
+      const computerChoice = choices[Math.floor(Math.random() * 3)];
+      let outcome = "";
+
+      if (playerChoice === computerChoice) {
+        outcome = "It's a draw!";
+        draws++;
+      } else if (
+        (playerChoice === "rock" && computerChoice === "scissors") ||
+        (playerChoice === "paper" && computerChoice === "rock") ||
+        (playerChoice === "scissors" && computerChoice === "paper")
+      ) {
+        outcome = "You win!";
+        userWins++;
+        winSound.play();
+      } else {
+        outcome = "Computer wins!";
+        computerWins++;
+        loseSound.play();
+      }
+
+      rounds++;
+      resultDiv.innerHTML = `${outcome} 💥`;
+      playerChoiceDiv.innerHTML = `You chose: ${emojis[playerChoice]}`;
+      computerChoiceDiv.innerHTML = `Computer chose: ${emojis[computerChoice]}`;
+
+      if (rounds === maxRounds) {
+        showSummary();
+      }
+    }
+
+    function showSummary() {
+      summaryDiv.innerHTML = `
+        <hr>
+        <strong>Game Over!</strong><br>
+        Total Rounds: ${maxRounds}<br>
+        You won: ${userWins} times<br>
+        Computer won: ${computerWins} times<br>
+        Draws: ${draws} times
+      `;
+    }
+
+    function resetGame() {
+      userWins = 0;
+      computerWins = 0;
+      draws = 0;
+      rounds = 0;
+      resultDiv.innerHTML = "Let's Play!";
+      playerChoiceDiv.innerHTML = "";
+      computerChoiceDiv.innerHTML = "";
+      summaryDiv.innerHTML = "";
+    }
+  </script>
+</body>
+</html>

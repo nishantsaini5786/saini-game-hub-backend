@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <title>SPS Game - Saini Games Hub</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('bg.jpg') center/cover fixed no-repeat;
+      color: #fffdfd;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      text-align: center;
+      animation: waveBG 15s infinite linear;
+      background-size: 110%;
+      overflow-x: hidden;
+    }
+
+    @keyframes waveBG {
+      0% { background-position: 50% 50%; }
+      50% { background-position: 48% 52%; }
+      100% { background-position: 50% 50%; }
+    }
+
+    header {
+      padding: 60px 20px 10px;
+    }
+
+    .animated-title {
+      font-size: 3.5em;
+      color: #ffcc00;
+      text-shadow: 0 0 15px #ffcc00, 0 0 25px orange;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px 40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .game-title {
+      font-size: 2.8em;
+      color: #fff9b0;
+      margin-bottom: 20px;
+    }
+
+    .game-desc {
+      font-size: 1.4em;
+      color: #ffffdd;
+      max-width: 600px;
+      margin-bottom: 40px;
+    }
+
+    .play-button {
+      background-color: #ffcc00;
+      color: black;
+      padding: 15px 35px;
+      font-size: 1.5em;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      animation: glowPulse 2s infinite;
+    }
+
+    @keyframes glowPulse {
+      0% { box-shadow: 0 0 5px #ffcc00; }
+      50% { box-shadow: 0 0 20px #ffcc00; }
+      100% { box-shadow: 0 0 5px #ffcc00; }
+    }
+
+    .play-button:hover {
+      background-color: white;
+      color: black;
+      transform: scale(1.05);
+    }
+
+    .back-btn {
+      margin-top: 50px;
+    }
+
+    .back-btn a {
+      display: inline-block;
+      background-color: #222;
+      color: white;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .back-btn a:hover {
+      background-color: #ffcc00;
+      color: black;
+      box-shadow: 0 0 10px #ffcc00;
+    }
+
+    footer {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 30px 20px;
+      font-size: 1.3em;
+      border-top: 5px double #ffcc00;
+      color: #fff2c2;
+      text-align: center;
+      z-index: 2;
+    }
+
+    footer a {
+      color: #ffccaa;
+      margin: 0 10px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    footer a:hover {
+      color: white;
+    }
+
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      top: 0;
+      left: 0;
+    }
+
+    @media screen and (max-width: 600px) {
+      .animated-title { font-size: 2.4em; }
+      .game-title { font-size: 2em; }
+      .play-button {
+        font-size: 1.2em;
+        padding: 10px 25px;
+      }
+      footer { font-size: 1em; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="particles-js"></div>
+
+  <header>
+    <h1 class="animated-title">✊✋✌️</h1>
+    <h1 class="animated-title">S P S</h1>
+  </header>
+
+  <main>
+    <h2 class="game-title">Rock, Paper, Scissors... Who Wins?</h2>
+    <p class="game-desc">
+      The classic battle of hands! Play with fun and test your luck. Start the match now.
+    </p>
+    <a href="sps_game.html">
+      <button class="play-button" onclick="vibrateOnClick()">Start Playing</button>
+    </a>
+
+    <div class="back-btn">
+      <a href="2_index.html">⬅️ Back to Home Page</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Created by Nishant Saini |
+      <a href="https://www.instagram.com/nishantt_sainii/?hl=en" target="_blank">Instagram</a> |
+      <a href="https://www.linkedin.com/in/nishant-saini-6a695b322/" target="_blank">LinkedIn</a> |
+      <a href="tel:+919625700719">📞 9625700719</a>
+    </p>
+    <p>&copy; 2025 Saini Games Hub</p>
+  </footer>
+
+  <!-- Background Music -->
+  <audio id="bgMusic" src="https://www.fesliyanstudios.com/play-mp3/387" autoplay loop></audio>
+
+  <!-- JS Scripts -->
+  <script>
+    function vibrateOnClick() {
+      if (navigator.vibrate) {
+        navigator.vibrate(150);
+      }
+    }
+  </script>
+
+  <!-- Particles JS -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+        "color": { "value": "#fff" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.5, "random": true },
+        "size": { "value": 3, "random": true },
+        "line_linked": { "enable": false },
+        "move": { "enable": true, "speed": 1 }
+      },
+      "interactivity": {
+        "events": {
+          "onhover": { "enable": true, "mode": "repulse" }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

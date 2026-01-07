@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="logo.png" />
+
+  <title>Water Sort - Saini Games Hub</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('bg.jpg') center/cover fixed no-repeat;
+      color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      text-align: center;
+      animation: waveBG 15s infinite linear;
+      background-size: 110%;
+    }
+
+    @keyframes waveBG {
+      0% {
+        background-position: 50% 50%;
+      }
+
+      50% {
+        background-position: 48% 52%;
+      }
+
+      100% {
+        background-position: 50% 50%;
+      }
+    }
+
+    header {
+      padding: 60px 20px 10px;
+    }
+
+    .animated-title {
+      font-size: 3.5em;
+      color: #5ce1e6;
+      text-shadow: 0 0 15px black, 0 0 25px #5ce1e6;
+      animation: slideDown 2s ease-out;
+    }
+
+    @keyframes slideDown {
+      0% {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 20px 40px;
+    }
+
+    .game-title {
+      font-size: 2.8em;
+      color: #c1f9ff;
+      margin-bottom: 20px;
+    }
+
+    .game-desc {
+      font-size: 1.4em;
+      color: #e6fcff;
+      max-width: 600px;
+      margin-bottom: 40px;
+    }
+
+    .play-button {
+      background-color: #5ce1e6;
+      color: black;
+      padding: 15px 35px;
+      font-size: 1.5em;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .play-button:hover {
+      background-color: #b0fbff;
+      color: black;
+      box-shadow: 0 0 15px white;
+    }
+
+    .back-btn {
+      margin-top: 50px;
+    }
+
+    .back-btn a {
+      display: inline-block;
+      background-color: #003344;
+      color: white;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .back-btn a:hover {
+      background-color: #5ce1e6;
+      color: black;
+      box-shadow: 0 0 10px #5ce1e6;
+    }
+
+    footer {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 30px 20px;
+      font-size: 1.3em;
+      border-top: 5px double #5ce1e6;
+      color: #baffff;
+      text-align: center;
+    }
+
+    footer a {
+      color: #a3ffff;
+      margin: 0 10px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    footer a:hover {
+      color: white;
+    }
+
+    @media screen and (max-width: 600px) {
+      .animated-title {
+        font-size: 2.4em;
+      }
+
+      .game-title {
+        font-size: 2em;
+      }
+
+      .play-button {
+        font-size: 1.2em;
+        padding: 10px 25px;
+      }
+
+      footer {
+        font-size: 1em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1 class="animated-title">🧪 WATER SORT</h1>
+  </header>
+
+  <main>
+    <h2 class="game-title">Pour, Match, and Solve</h2>
+    <p class="game-desc">
+      Can you sort all the colors without spilling a drop? Think smart and pour wisely!
+    </p>
+    <a href="water_level.html" class="play-button">💧 Start Sorting</a>
+
+    <div class="back-btn">
+      <a href="2_index.html">⬅️ Back to Home Page</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Created by Nishant Saini |
+      <a href="https://www.instagram.com/nishantt_sainii/?hl=en" target="_blank">Instagram</a> |
+      <a href="https://www.linkedin.com/in/nishant-saini-6a695b322/" target="_blank">LinkedIn</a> |
+      <a href="tel:+919625700719">📞 9625700719</a>
+    </p>
+    <p>&copy; 2025 Saini Games Hub</p>
+  </footer>
+
+</body>
+
+</html>

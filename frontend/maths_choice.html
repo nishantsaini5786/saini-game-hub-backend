@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <title>Maths Game - Select Type</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('bg.jpg') center/cover fixed no-repeat;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      animation: waveBG 15s infinite linear;
+      background-size: 110%;
+    }
+
+    @keyframes waveBG {
+      0% { background-position: 50% 50%; }
+      50% { background-position: 48% 52%; }
+      100% { background-position: 50% 50%; }
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 40px;
+      background: linear-gradient(to right, #ff8a00, #e52e71);
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #ff0080; }
+      to { text-shadow: 0 0 20px #00ffff; }
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+      max-width: 300px;
+      align-items: center;
+    }
+
+    .option-box {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #ff0080;
+      border-radius: 15px;
+      padding: 20px;
+      font-size: 1.5em;
+      text-decoration: none;
+      color: white;
+      transition: 0.3s ease;
+      width: 100%;
+      box-shadow: 0 0 10px #ff008050;
+      position: relative;
+      overflow: hidden;
+
+      /* 🔥 Fade In Animation */
+      opacity: 0;
+      animation: fadeInUp 1s forwards;
+    }
+
+    .option-box:nth-child(1) { animation-delay: 0.1s; }
+    .option-box:nth-child(2) { animation-delay: 0.2s; }
+    .option-box:nth-child(3) { animation-delay: 0.3s; }
+    .option-box:nth-child(4) { animation-delay: 0.4s; }
+    .option-box:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .option-box::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, #ff00cc33, transparent 70%);
+      animation: pulse 4s linear infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 0.4; }
+      100% { transform: scale(1); opacity: 0.8; }
+    }
+
+    .option-box:hover {
+      background-color: #ff0080;
+      color: #000;
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #ff00dd, 0 0 40px #ff00dd88;
+    }
+
+    .back-btn {
+      margin: 50px 0 0;
+    }
+
+    .back-btn a {
+      background-color: #222;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 1.1em;
+      transition: 0.3s ease;
+    }
+
+    .back-btn a:hover {
+      background-color: #ff0080;
+      color: black;
+      box-shadow: 0 0 10px #ff0080;
+    }
+
+    footer {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      font-size: 1em;
+      color: #ccc;
+      text-align: center;
+      border-top: 4px solid #ff00cc;
+    }
+
+    footer a {
+      color: #ff66ff;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: cyan;
+      text-shadow: 0 0 5px white;
+    }
+
+    @media screen and (max-width: 600px) {
+      h1 { font-size: 2.2em; }
+      .option-box { font-size: 1.2em; padding: 20px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 🔥 Hover Sound -->
+  <audio id="hoverSound" src="hover.mp3" preload="auto"></audio>
+
+  <main>
+    <h1>🧠 Select Maths Operation</h1>
+
+    <div class="options">
+      <a href="add.html" class="option-box">➕ Addition</a>
+      <a href="sub.html" class="option-box">➖ Subtraction</a>
+      <a href="multiple.html" class="option-box">✖️ Multiplication</a>
+      <a href="division.html" class="option-box">➗ Division</a>
+      <a href="mix_sum.html" class="option-box">🔀 Mix Questions</a>
+    </div>
+
+    <div class="back-btn">
+      <a href="maths.html">⬅️ Back to Maths Menu</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Created by Nishant Saini |
+      <a href="https://www.instagram.com/nishantt_sainii/?hl=en" target="_blank">Instagram</a> |
+      <a href="https://www.linkedin.com/in/nishant-saini-6a695b322/" target="_blank">LinkedIn</a> |
+      <a href="tel:+919625700719">📞 9625700719</a>
+    </p>
+    <p>&copy; 2025 Saini Games Hub</p>
+  </footer>
+
+  <!-- 🔥 JavaScript for Hover Sound -->
+  <script>
+    const hoverSound = document.getElementById("hoverSound");
+    document.querySelectorAll('.option-box').forEach(btn => {
+      btn.addEventListener('mouseenter', () => {
+        hoverSound.currentTime = 0;
+        hoverSound.play();
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/png" href="logo.png" />
+
+  <title>Subtraction Game</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('bg.jpg') center/cover fixed no-repeat;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      animation: waveBG 15s infinite linear;
+      background-size: 110%;
+    }
+
+    @keyframes waveBG {
+      0% { background-position: 50% 50%; }
+      50% { background-position: 48% 52%; }
+      100% { background-position: 50% 50%; }
+    }
+
+    header {
+      padding: 30px;
+      text-align: center;
+      background-color: rgba(0, 0, 0, 0.75);
+      border-bottom: 3px solid #ffcc00;
+    }
+
+    header h1 {
+      font-size: 2.8em;
+      background: linear-gradient(45deg, #ffcc00, #ff0066);
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #ffaa00; }
+      to   { text-shadow: 0 0 25px #ff0066; }
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .game-box {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px #ffcc00;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .question {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .option {
+      background: #ffcc00;
+      color: #000;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.2em;
+      border: none;
+      transition: 0.3s;
+      text-decoration: none;
+      margin: 5px;
+      display: inline-block;
+    }
+
+    .option:hover {
+      background: #ffee66;
+      box-shadow: 0 0 10px white;
+    }
+
+    .correct {
+      background-color: #00ff00 !important;
+      color: black;
+    }
+
+    .wrong {
+      background-color: #ff3333 !important;
+      color: white;
+    }
+
+    .next-btn {
+      display: none;
+      margin-top: 15px;
+      background: #ff0066;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: none;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    .score {
+      margin-top: 15px;
+      font-size: 1.2em;
+      color: #ffeeaa;
+    }
+
+    .result-message {
+      font-size: 1.3em;
+      margin-top: 10px;
+    }
+
+    .extra-buttons {
+      margin-top: 25px;
+    }
+
+    footer {
+      background: rgba(0, 0, 0, 0.75);
+      padding: 20px;
+      text-align: center;
+      font-size: 1em;
+      color: #ccc;
+      border-top: 3px solid #ffcc00;
+    }
+
+    footer a {
+      color: #ff66ff;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: yellow;
+      text-shadow: 0 0 5px white;
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>➖ Subtraction Quiz</h1>
+  </header>
+
+  <main>
+    <div class="game-box">
+      <div class="question" id="question">Loading...</div>
+      <div class="options" id="options"></div>
+      <div class="result-message" id="message"></div>
+      <button class="next-btn" id="nextBtn">Next Question</button>
+      <div class="score" id="score">Score: 0 / 30</div>
+
+      <div class="extra-buttons">
+        <button onclick="location.reload()" class="option">🔁 Play Again</button>
+        <a href="maths_choice.html" class="option">📋 Back to Menu</a>
+        <a href="2_index.html" class="option">🏠 Home</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Created by Nishant Saini |
+      <a href="https://www.instagram.com/nishantt_sainii/?hl=en" target="_blank">Instagram</a> |
+      <a href="https://www.linkedin.com/in/nishant-saini-6a695b322/" target="_blank">LinkedIn</a> |
+      <a href="tel:+919625700719">📞 9625700719</a>
+    </p>
+    <p>&copy; 2025 Saini Games Hub</p>
+  </footer>
+
+  <script>
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const nextBtn = document.getElementById('nextBtn');
+    const messageEl = document.getElementById('message');
+    const scoreEl = document.getElementById('score');
+
+    let current = 0;
+    let score = 0;
+    let timeout;
+    const total = 30;
+
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function generateQuestion(level) {
+      const num1 = getRandomInt(10 + level * 2, 50 + level * 10);
+      const num2 = getRandomInt(1, num1); // ensure num1 >= num2
+      const answer = num1 - num2;
+      let options = [answer];
+
+      while (options.length < 4) {
+        let fake = getRandomInt(answer - 10, answer + 10);
+        if (!options.includes(fake) && fake !== answer && fake >= 0) {
+          options.push(fake);
+        }
+      }
+
+      options = options.sort(() => Math.random() - 0.5);
+      return { question: `${num1} - ${num2} = ?`, answer, options };
+    }
+
+    function showQuestion() {
+      messageEl.textContent = "";
+      if (current >= total) {
+        questionEl.innerText = `🎉 Game Over! Final Score: ${score} / ${total}`;
+        optionsEl.innerHTML = "";
+        nextBtn.style.display = "none";
+        return;
+      }
+
+      const level = Math.floor(current / 5);
+      const q = generateQuestion(level);
+      questionEl.innerText = `Q${current + 1}: ${q.question}`;
+      optionsEl.innerHTML = "";
+
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.className = 'option';
+        btn.onclick = () => {
+          clearTimeout(timeout);
+          Array.from(optionsEl.children).forEach(b => {
+            b.disabled = true;
+            if (parseInt(b.innerText) === q.answer) b.classList.add('correct');
+            else b.classList.add('wrong');
+          });
+
+          if (opt === q.answer) {
+            messageEl.textContent = "✅ Correct!";
+            score++;
+          } else {
+            messageEl.textContent = "❌ Wrong!";
+          }
+
+          scoreEl.innerText = `Score: ${score} / ${total}`;
+          current++;
+          nextBtn.style.display = "inline-block";
+        };
+        optionsEl.appendChild(btn);
+      });
+
+      timeout = setTimeout(() => {
+        messageEl.textContent = "⏱ Time's up!";
+        Array.from(optionsEl.children).forEach(b => {
+          b.disabled = true;
+          if (parseInt(b.innerText) === q.answer) b.classList.add('correct');
+        });
+        current++;
+        scoreEl.innerText = `Score: ${score} / ${total}`;
+        nextBtn.style.display = "inline-block";
+      }, 5000);
+
+      nextBtn.style.display = "none";
+    }
+
+    nextBtn.onclick = showQuestion;
+    showQuestion();
+  </script>
+
+</body>
+</html>

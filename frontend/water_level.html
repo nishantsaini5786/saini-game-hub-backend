@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="logo.png" />
+
+  <title>Sort Water Puzzle - Levels</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('bg.jpg') center/cover no-repeat fixed;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header,
+    footer {
+      background-color: rgba(0, 0, 0, 0.85);
+      color: #00ffff;
+      text-align: center;
+      padding: 15px;
+      font-size: 1.5rem;
+      text-shadow: 0 0 5px #0ff, 0 0 10px #0f0;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px #0ff;
+      }
+
+      to {
+        text-shadow: 0 0 20px #0f0;
+      }
+    }
+
+    .levels-container {
+      flex: 1;
+      padding: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    .level-box {
+      background: rgba(0, 0, 0, 0.7);
+      border: 3px solid #00ffff;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+    }
+
+    .level-box:hover {
+      background: rgba(0, 255, 255, 0.9);
+      color: #000;
+      transform: scale(1.05);
+    }
+
+    .go-home {
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      background: #ff0080;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 10px white;
+    }
+
+    .go-home:hover {
+      background: #ff66aa;
+    }
+
+    footer a {
+      color: #0ff;
+      margin: 0 10px;
+      text-decoration: none;
+      transition: 0.3s ease;
+      font-weight: bold;
+      display: inline-block;
+      transform: scale(1);
+    }
+
+    footer a:hover {
+      transform: scale(1.1);
+      color: white;
+      text-shadow: 0 0 8px #00ffff;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    🧪 Sort Water Puzzle – Level Select
+  </header>
+
+  <div class="levels-container">
+    <!-- 36 levels -->
+    <script>
+      for (let i = 1; i <= 36; i++) {
+        document.write(`<div class="level-box" onclick="startLevel(${i})">Level ${i}</div>`);
+      }
+    </script>
+  </div>
+
+  <button class="go-home" onclick="location.href='2_index.html'">🏠 Go to Home Page</button>
+
+  <footer>
+    Created by Nishant Saini |
+    <a href="https://www.instagram.com/nishantt_sainii/" target="_blank">Instagram</a> |
+    <a href="https://t.me/NishanttSainii" target="_blank">Telegram</a>
+    <p>&copy; 2025 Saini Games Hub</p>
+  </footer>
+
+  <script>
+    function startLevel(level) {
+      if (level === 1) {
+        location.href = "water_1.html";
+      } 
+      else if (level === 2) {
+        location.href = "water_2.html";
+      } 
+      else if (level === 3) {
+        location.href = "water_3.html";
+      }
+      else if (level === 4) {
+        location.href = "water_4.html";
+      }
+      else if (level === 5) {
+        location.href = "water_5.html";
+      }
+      else if (level === 6) {
+        location.href = "water_6.html";
+      } 
+      else if (level === 7) {
+        location.href = "water_7.html";
+      }
+      else if (level === 8) {
+        location.href = "water_8.html";
+      }
+      else if (level === 9) {
+        location.href = "water_9.html";
+      }
+        else if (level === 10) {
+        location.href = "water_10.html";
+      } 
+      else if (level === 11) {
+        location.href = "water_11.html";
+      }
+      else if (level === 12) {
+        location.href = "water_12.html";
+      }
+      else if (level === 13) {
+        location.href = "water_13.html";
+      }
+      else if (level === 14) {
+        location.href = "water_14.html";
+      } 
+      else if (level === 15) {
+        location.href = "water_15.html";
+      }
+      else if (level === 16) {
+        location.href = "water_16.html";
+      }
+      else if (level === 17) {
+        location.href = "water_17.html";
+      }
+      else if (level === 18) {
+        location.href = "water_18.html";
+      }
+      else if (level === 19) {
+        location.href = "water_19.html";
+      }
+      else if (level === 20) {
+        location.href = "water_20.html";
+      }
+      else if (level === 21) {
+        location.href = "water_21.html";
+      } 
+      else if (level === 22) {
+        location.href = "water_22.html";
+      }
+      else if (level === 23) {
+        location.href = "water_23.html";
+      }
+      else if (level === 24) {
+        location.href = "water_24.html";
+      }
+        else if (level === 25) {
+        location.href = "water_25.html";
+      } 
+      else if (level === 26) {
+        location.href = "water_26.html";
+      }
+      else if (level === 27) {
+        location.href = "water_27.html";
+      }
+      else if (level === 28) {
+        location.href = "water_28.html";
+      }
+      else if (level === 29) {
+        location.href = "water_29.html";
+      } 
+      else if (level === 30) {
+        location.href = "water_30.html";
+      }
+      else if (level === 31) {
+        location.href = "water_31.html";
+      }
+      else if (level === 32) {
+        location.href = "water_32.html";
+      }
+      else if (level === 33) {
+        location.href = "water_33.html";
+      } 
+      else if (level === 34) {
+        location.href = "water_34.html";
+      }
+      else if (level === 35) {
+        location.href = "water_35.html";
+      }
+      else if (level === 36) {
+        location.href = "water_36.html";
+      }
+      else {
+        alert(`Level ${level} abhi ready nahi hai!`);
+      }
+    }
+
+  </script>
+
+</body>
+
+</html>

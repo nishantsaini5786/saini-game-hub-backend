@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="logo.png" />
+
+  <title>Sort Water Puzzle - Level 30</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('bg.jpg') center/cover no-repeat fixed;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      text-align: center;
+    }
+    header {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      font-size: 1.5em;
+      text-shadow: 0 0 10px cyan;
+    }
+    .game-area {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding: 20px;
+    }
+    .tube {
+      width: 60px;
+      height: 200px;
+      border: 4px solid white;
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column-reverse;
+      justify-content: flex-start;
+      overflow: hidden;
+      cursor: pointer;
+      background-color: rgba(255, 255, 255, 0.1);
+      transition: 0.3s;
+    }
+    .tube.selected {
+      transform: scale(1.2);
+      border-color: #00ffff;
+      box-shadow: 0 0 10px #00ffff;
+    }
+    .color-block {
+      width: 100%;
+      height: 25%;
+      transition: 0.3s;
+    }
+    .controls {
+      margin: 10px auto;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    .controls button {
+      padding: 10px 20px;
+      background: #5ce1e6;
+      border: none;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 8px white;
+    }
+    .controls button:hover {
+      background: #a3ffff;
+      color: black;
+    }
+    #winMessage {
+      font-size: 2em;
+      color: #00ffcc;
+      margin-top: 20px;
+      display: none;
+      animation: flash 1s infinite alternate;
+    }
+    #winMessage button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #00ffcc;
+      cursor: pointer;
+    }
+    #winMessage button:hover {
+      background-color: white;
+      color: black;
+    }
+    @keyframes flash {
+      from { text-shadow: 0 0 10px #00ffff; }
+      to { text-shadow: 0 0 20px #00ffcc, 0 0 30px white; }
+    }
+  </style>
+</head>
+<body>
+  <header>💧 Sort Water Puzzle - Level 30</header>
+  <div class="game-area" id="gameArea"></div>
+
+  <div class="controls">
+    <button onclick="location.href='2_index.html'">🏠 Home</button>
+    <button onclick="location.href='water_level.html'">📋 Level Menu</button>
+    <button onclick="startLevel()">🔄 Restart</button>
+  </div>
+
+  <div id="winMessage">
+    🎉 YOU WIN! 🎉<br>
+    <button onclick="location.href='water_31.html'">➡️ Next Level</button>
+  </div>
+
+  <script>
+    let tubeData = [];
+    let selectedTube = null;
+
+    function createTube(colors, index) {
+      const tube = document.createElement('div');
+      tube.className = 'tube';
+      tube.dataset.index = index;
+
+      colors.forEach(color => {
+        const block = document.createElement('div');
+        block.className = 'color-block';
+        block.style.background = color;
+        tube.appendChild(block);
+      });
+
+      if (selectedTube === index) {
+        tube.classList.add('selected');
+      }
+
+      tube.onclick = () => handleTubeClick(index);
+      return tube;
+    }
+
+    function renderTubes() {
+      const gameArea = document.getElementById('gameArea');
+      gameArea.innerHTML = '';
+      tubeData.forEach((colors, index) => {
+        const tube = createTube(colors, index);
+        gameArea.appendChild(tube);
+      });
+    }
+
+    function handleTubeClick(index) {
+      if (selectedTube === null && tubeData[index].length > 0) {
+        selectedTube = index;
+        renderTubes();
+        return;
+      }
+
+      if (selectedTube !== null && selectedTube !== index) {
+        const from = tubeData[selectedTube];
+        const to = tubeData[index];
+
+        if (from.length === 0) {
+          selectedTube = null;
+          return;
+        }
+
+        const movingColor = from[from.length - 1];
+        let count = 0;
+
+        for (let i = from.length - 1; i >= 0 && from[i] === movingColor; i--) {
+          count++;
+        }
+
+        const space = 4 - to.length;
+
+        if (space > 0 && (to.length === 0 || to[to.length - 1] === movingColor)) {
+          const moveCount = Math.min(count, space);
+          const movingBlocks = [];
+
+          for (let i = 0; i < moveCount; i++) {
+            movingBlocks.push(from.pop());
+          }
+
+          renderTubes();
+
+          setTimeout(() => {
+            for (let i = 0; i < movingBlocks.length; i++) {
+              to.push(movingBlocks[i]);
+            }
+
+            selectedTube = null;
+            renderTubes();
+            checkWin();
+          }, 200);
+        } else {
+          selectedTube = null;
+          renderTubes();
+        }
+      } else {
+        selectedTube = null;
+        renderTubes();
+      }
+    }
+
+    function checkWin() {
+      const win = tubeData.every(tube => {
+        if (tube.length === 0) return true;
+        if (tube.length !== 4) return false;
+        return tube.every(color => color === tube[0]);
+      });
+
+      if (win) {
+        document.getElementById('winMessage').style.display = 'block';
+      }
+    }
+
+    function startLevel() {
+      selectedTube = null;
+      tubeData = [
+        ['red', 'yellow', 'green', 'blue'],
+        ['blue', 'green', 'yellow', 'red'],
+        ['green', 'blue', 'red', 'yellow'],
+        ['yellow', 'red', 'blue', 'green'],
+        ['green', 'yellow', 'blue', 'red'],
+        [],
+        []
+      ];
+      document.getElementById('winMessage').style.display = 'none';
+      renderTubes();
+    }
+
+    window.onload = startLevel;
+  </script>
+</body>
+</html>

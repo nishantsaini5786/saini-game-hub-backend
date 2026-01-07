@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/png" href="logo.png" />
+
+  <title>Choose Level - Bomb Finder</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('bg.jpg') center/cover fixed no-repeat;
+      animation: waveBG 15s infinite linear;
+      background-size: 110%;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      overflow-x: hidden;
+
+    }
+
+    @keyframes waveBG {
+      0% { background-position: 50% 50%; }
+      50% { background-position: 48% 52%; }
+      100% { background-position: 50% 50%; }
+    }
+
+    header {
+      padding: 50px 20px 20px;
+    }
+
+    .title {
+      font-size: 3em;
+      color: #ff3333;
+      text-shadow: 0 0 15px #ff0000;
+      animation: shake 1.2s infinite;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-2px); }
+      50% { transform: translateX(2px); }
+      75% { transform: translateX(-2px); }
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .level-box {
+      background-color: rgba(255, 0, 0, 0.2);
+      border: 2px solid #ff4d4d;
+      border-radius: 10px;
+      padding: 15px 30px;
+      margin: 15px;
+      font-size: 1.4em;
+      color: #fff;
+      text-decoration: none;
+      transition: 0.3s ease;
+      box-shadow: 0 0 10px red;
+    }
+
+    .level-box:hover {
+      background-color: #fff;
+      color: #000;
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #ff3333;
+    }
+
+    .back-btn {
+      margin-top: 30px;
+    }
+
+    .back-btn a {
+      text-decoration: none;
+      background-color: #222;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 1.2em;
+      transition: 0.3s ease;
+    }
+
+    .back-btn a:hover {
+      background-color: red;
+      box-shadow: 0 0 10px red;
+    }
+
+    footer {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-top: 5px double red;
+      color: #ffcccc;
+      font-size: 1em;
+    }
+
+    footer a {
+      color: #ffaaaa;
+      margin: 0 8px;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: white;
+    }
+
+    @media screen and (max-width: 600px) {
+      .title {
+        font-size: 2em;
+      }
+
+      .level-box {
+        font-size: 1.2em;
+        padding: 12px 20px;
+      }
+
+      footer {
+        font-size: 0.9em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 class="title">💣 Select Bomb Difficulty</h1>
+  </header>
+
+  <main>
+    <a class="level-box"href="3_bomb.html?bombs=3">🎯 3 Bombs in 25 Boxes</a>
+    <a class="level-box" href="5_bomb.html?bombs=5">🎯 5 Bombs in 25 Boxes</a>
+    <a class="level-box" href="7_bomb.html?bombs=7">🎯 7 Bombs in 25 Boxes</a>
+    <a class="level-box" href="9_bomb.html?bombs=9">🎯 9 Bombs in 25 Boxes</a>
+    <a class="level-box" href="11_bomb.html?bombs=11">🎯 11 Bombs in 25 Boxes</a>
+
+    <div class="back-btn">
+      <a href="2_index.html">⬅️ Back to Home Page</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Created by Nishant Saini |
+      <a href="https://www.instagram.com/nishantt_sainii/?hl=en" target="_blank">Instagram</a> |
+      <a href="https://www.linkedin.com/in/nishant-saini-6a695b322/" target="_blank">LinkedIn</a> |
+      <a href="tel:+919625700719">📞 9625700719</a>
+    </p>
+    <p>&copy; 2025 Saini Games Hub</p>
+  </footer>
+
+</body>
+</html>

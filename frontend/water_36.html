@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="icon" type="image/png" href="logo.png" />
+
+  <title>Level 36 - Final Trap</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(-45deg, #000000, #0f0f0f, #1a1a1a, #000000);
+      background-size: 400% 400%;
+      animation: backgroundWave 30s ease infinite;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      text-align: center;
+    }
+
+    @keyframes backgroundWave {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    header {
+      background-color: rgba(0, 0, 0, 0.9);
+      padding: 25px;
+      font-size: 2.2rem;
+      color: #00ffff;
+      text-shadow: 0 0 15px cyan, 0 0 25px blue;
+      animation: pulse 2s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { text-shadow: 0 0 15px cyan; }
+      to { text-shadow: 0 0 25px magenta, 0 0 30px white; }
+    }
+
+    .game-area {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 30px;
+      flex: 1;
+    }
+
+    .tube {
+      width: 60px;
+      height: 200px;
+      border: 3px solid white;
+      border-radius: 12px;
+      background-color: rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column-reverse;
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+
+    .tube.selected {
+      transform: scale(1.2);
+      border-color: magenta;
+      box-shadow: 0 0 15px #ff00ff;
+    }
+
+    .color-block {
+      width: 100%;
+      height: 25%;
+    }
+
+    .controls {
+      margin: 20px;
+    }
+
+    .controls button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #00ffff;
+      color: black;
+      margin: 5px;
+      box-shadow: 0 0 8px white;
+    }
+
+    .controls button:hover {
+      background: white;
+    }
+
+    #winMessage {
+      display: none;
+      font-size: 2.2em;
+      color: #00ffcc;
+      animation: flash 1s infinite alternate;
+    }
+
+    @keyframes flash {
+      from { text-shadow: 0 0 15px cyan; }
+      to { text-shadow: 0 0 25px white, 0 0 30px magenta; }
+    }
+
+    footer {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      font-size: 0.9rem;
+      color: #a3ffff;
+    }
+
+    footer a {
+      color: #a3ffff;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header>🧠 Final Trap - Level 36</header>
+
+  <div class="game-area" id="gameArea"></div>
+
+  <div class="controls">
+    <button onclick="location.href='2_index.html'">🏠 Home</button>
+    <button onclick="location.href='water_level.html'">📋 Levels</button>
+    <button onclick="startLevel()">🔄 Restart</button>
+  </div>
+
+  <div id="winMessage">
+    🎉 YOU WIN! 🎉<br>
+    <button onclick="alert('This was the final level!')">🏁 Game Over</button>
+  </div>
+
+  <footer>
+    Created by Nishant Saini |
+    <a href="https://www.instagram.com/nishantt_sainii/" target="_blank">Instagram</a> |
+    <a href="https://t.me/NishanttSainii" target="_blank">Telegram</a>
+    <p>&copy; 2025 Saini Games Hub</p>
+  </footer>
+
+<script>
+  let tubeData = [];
+  let selectedTube = null;
+
+  function createTube(colors, index) {
+    const tube = document.createElement('div');
+    tube.className = 'tube';
+    tube.dataset.index = index;
+
+    colors.forEach(color => {
+      const block = document.createElement('div');
+      block.className = 'color-block';
+      block.style.background = color;
+      tube.appendChild(block);
+    });
+
+    if (selectedTube === index) {
+      tube.classList.add('selected');
+    }
+
+    tube.onclick = () => handleTubeClick(index);
+    return tube;
+  }
+
+  function renderTubes() {
+    const gameArea = document.getElementById('gameArea');
+    gameArea.innerHTML = '';
+    tubeData.forEach((colors, index) => {
+      const tube = createTube(colors, index);
+      gameArea.appendChild(tube);
+    });
+  }
+
+  function handleTubeClick(index) {
+    if (selectedTube === null && tubeData[index].length > 0) {
+      selectedTube = index;
+      renderTubes();
+      return;
+    }
+
+    if (selectedTube !== null && selectedTube !== index) {
+      const from = tubeData[selectedTube];
+      const to = tubeData[index];
+
+      if (from.length === 0) {
+        selectedTube = null;
+        return;
+      }
+
+      const movingColor = from[from.length - 1];
+      let count = 0;
+
+      for (let i = from.length - 1; i >= 0 && from[i] === movingColor; i--) {
+        count++;
+      }
+
+      const space = 4 - to.length;
+
+      if (space > 0 && (to.length === 0 || to[to.length - 1] === movingColor)) {
+        const moveCount = Math.min(count, space);
+        const movingBlocks = [];
+
+        for (let i = 0; i < moveCount; i++) {
+          movingBlocks.push(from.pop());
+        }
+
+        renderTubes();
+
+        setTimeout(() => {
+          for (let i = 0; i < movingBlocks.length; i++) {
+            to.push(movingBlocks[i]);
+          }
+          selectedTube = null;
+          renderTubes();
+          checkWin();
+        }, 200);
+      } else {
+        selectedTube = null;
+        renderTubes();
+      }
+    } else {
+      selectedTube = null;
+      renderTubes();
+    }
+  }
+
+  function checkWin() {
+    const win = tubeData.every(tube => {
+      if (tube.length === 0) return true;
+      if (tube.length !== 4) return false;
+      return tube.every(color => color === tube[0]);
+    });
+
+    if (win) {
+      document.getElementById('winMessage').style.display = 'block';
+    }
+  }
+
+  function startLevel() {
+    selectedTube = null;
+    tubeData = [
+      ['red', 'green', 'blue', 'yellow'],
+      ['yellow', 'red', 'green', 'blue'],
+      ['blue', 'yellow', 'red', 'green'],
+      ['green', 'blue', 'yellow', 'red'],
+      ['red', 'green', 'yellow', 'blue'],
+      ['blue', 'red', 'green', 'yellow'],
+      []
+         // No empty tube — pure DEADLOCK
+    ];
+    document.getElementById('winMessage').style.display = 'none';
+    renderTubes();
+  }
+
+  window.onload = startLevel;
+</script>
+
+</body>
+</html>

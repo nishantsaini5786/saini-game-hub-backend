@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome - Saini Games Hub</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: url('bg.jpg') center/cover no-repeat fixed;
+      color: white;
+    }
+
+    .page-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      font-size: 2em;
+      color: #00ffff;
+      text-shadow: 0 0 10px cyan;
+    }
+
+    .center-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .profile-pic {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      border: 5px solid cyan;
+      box-shadow: 0 0 25px cyan;
+      background: url('ns.jpg') center/cover no-repeat;
+      animation: pulse 3s infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .launch-btn {
+      margin-top: 25px;
+      background-color: black;
+      color: cyan;
+      border: 2px solid cyan;
+      font-size: 1.2em;
+      padding: 12px 30px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .launch-btn:hover {
+      background-color: cyan;
+      color: black;
+      box-shadow: 0 0 20px cyan;
+    }
+
+    .floating-icons span {
+      position: absolute;
+      font-size: 2em;
+      animation: floatAnim linear infinite;
+      color: #ffccff;
+    }
+
+    @keyframes floatAnim {
+      0% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(-100vh);
+        opacity: 0;
+      }
+    }
+
+    footer {
+      width: 100%;
+      text-align: center;
+      font-size: 0.95em;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 15px 10px;
+      border-top: 2px solid cyan;
+      color: #b3ffff;
+    }
+
+    footer a {
+      color: #66ffff;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: cyan;
+    }
+
+    @media screen and (max-width: 768px) {
+      header {
+        font-size: 1.6em;
+        padding: 15px;
+      }
+
+      .profile-pic {
+        width: 130px;
+        height: 130px;
+      }
+
+      .launch-btn {
+        font-size: 1em;
+        padding: 10px 25px;
+      }
+
+      .floating-icons span {
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrapper">
+    <header>🎮 Welcome to Saini Games Hub 🎮</header>
+
+    <div class="floating-icons">
+      <span style="left: 10%; animation-duration: 14s;">❌</span>
+      <span style="left: 25%; animation-duration: 18s;">🧱</span>
+      <span style="left: 40%; animation-duration: 13s;">➕</span>
+      <span style="left: 55%; animation-duration: 16s;">🧪</span>
+      <span style="left: 70%; animation-duration: 20s;">🧨</span>
+      <span style="left: 85%; animation-duration: 15s;">✊</span>
+      <span style="left: 35%; animation-duration: 17s;">🌀</span>
+    </div>
+
+    <div class="center-content">
+      <div class="profile-pic"></div>
+      <h2 style="font-size: 1.8em; margin-bottom: 10px;">Nishant Saini</h2>
+      <p style="font-size: 1.1em;">Game Developer | Creator | Coder</p>
+      <button class="launch-btn" onclick="location.href='login.html'">🚀 Launch Games Hub</button>
+    </div>
+
+    <footer>
+      <p>Created by Nishant Saini |
+        <a href="https://www.instagram.com/nishantt_sainii/?hl=en" target="_blank">Instagram</a> |
+        <a href="https://www.linkedin.com/in/nishant-saini-6a695b322/" target="_blank">LinkedIn</a> 
+      </p>
+      <p>&copy; 2025 Saini Games Hub</p>
+    </footer>
+  </div>
+</body>
+
+</html>

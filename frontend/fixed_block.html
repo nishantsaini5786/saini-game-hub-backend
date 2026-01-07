@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <title>Locked Shape Block Game</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('bg.jpg') center/cover no-repeat fixed;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      background-color: rgba(0,0,0,0.8);
+      color: #ffd700;
+      text-align: center;
+      padding: 10px;
+      font-size: 1.2em;
+      text-shadow: 0 0 5px #ff0, 0 0 10px #f0f;
+      animation: glow 2s infinite alternate;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #ff0; }
+      to { text-shadow: 0 0 20px #f0f; }
+    }
+    .game-container {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      flex-direction: column;
+      padding-top: 5px;
+    }
+    canvas {
+      background-color: rgba(0,0,0,0.7);
+      border: 4px solid cyan;
+      width: 240px;
+      height: 480px;
+    }
+    .btns {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .btns button {
+      padding: 6px 12px;
+      background: #ffa500;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.75em;
+      cursor: pointer;
+      box-shadow: 0 0 8px white;
+    }
+    .btns button:hover {
+      background: #ffc94d;
+    }
+    .mobile-controls {
+      display: flex;
+      justify-content: center;
+      margin: 8px 0;
+      gap: 12px;
+    }
+    .mobile-controls button {
+      padding: 10px 14px;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 8px;
+      background: #00ccff;
+      color: #000;
+      box-shadow: 0 0 6px white;
+    }
+    .mobile-controls button:hover {
+      background: cyan;
+    }
+    .game-over-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.85);
+      color: #fff;
+      padding: 30px;
+      font-size: 1.5em;
+      text-align: center;
+      border: 4px solid red;
+      display: none;
+      z-index: 10;
+    }
+    .game-over-box button {
+      margin-top: 15px;
+      padding: 8px 16px;
+      font-size: 0.9em;
+      background: #ff0080;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .game-over-box button:hover {
+      background: #ff66a3;
+    }
+    footer {
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #ffd700;
+      text-align: center;
+      font-size: 0.9em;
+      padding: 8px 5px;
+    }
+    footer a {
+      color: #ffaaaa;
+      margin: 0 6px;
+      text-decoration: none;
+    }
+    footer a:hover {
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🧱 Locked Shape Puzzle</h1>
+  </header>
+
+  <div class="game-container">
+    <canvas id="gameCanvas" width="240" height="480"></canvas>
+
+    <div class="btns">
+      <button onclick="rotateShape()">🔄</button>
+      <button onclick="location.href='block_menu.html'">🎮</button>
+      <button onclick="location.href='2_index.html'">🏠</button>
+    </div>
+
+    <div class="mobile-controls">
+      <button onclick="moveLeft()">⬅️</button>
+      <button onclick="moveDown()">⬇️</button>
+      <button onclick="moveRight()">➡️</button>
+    </div>
+
+    <div class="game-over-box" id="gameOver">
+      <div>🚫 Game Over</div>
+      <button onclick="location.reload()">🔁 Play Again</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>
+      Created by Nishant Saini |
+      <a href="https://www.instagram.com/nishantt_sainii/" target="_blank">Instagram</a> |
+      <a href="https://www.linkedin.com/in/nishant-saini-6a695b322/" target="_blank">LinkedIn</a> |
+      <a href="tel:+919625700719">📞 Contact</a>
+    </p>
+    <p>&copy; 2025 Saini Games Hub</p>
+  </footer>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const blockSize = 24;
+    const rows = 20;
+    const cols = 10;
+    let grid = Array.from({ length: rows }, () => Array(cols).fill(0));
+    const colors = ["", "red", "blue", "green", "orange", "purple", "cyan"];
+    const shapes = [
+      [[1,1],[1,1]],
+      [[1,1,1,1]],
+      [[0,1,0],[1,1,1]],
+      [[1,0,0],[1,1,1]],
+      [[0,0,1],[1,1,1]],
+      [[1,1,0],[0,1,1]]
+    ];
+    let current = spawnNewShape();
+
+    function drawBlock(x, y, colorIndex) {
+      ctx.fillStyle = colors[colorIndex];
+      ctx.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
+      ctx.strokeStyle = "black";
+      ctx.strokeRect(x * blockSize, y * blockSize, blockSize, blockSize);
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          if (grid[y][x]) drawBlock(x, y, grid[y][x]);
+        }
+      }
+      current.shape.forEach((row, dy) => {
+        row.forEach((val, dx) => {
+          if (val) drawBlock(current.x + dx, current.y + dy, current.color);
+        });
+      });
+    }
+
+    function moveDown() {
+      if (!collides(current.x, current.y + 1, current.shape)) {
+        current.y++;
+      } else {
+        fixShape();
+        clearFullRows();
+        if (current.y <= 0) {
+          document.getElementById("gameOver").style.display = "block";
+          clearInterval(gameLoop);
+          return;
+        }
+        current = spawnNewShape();
+      }
+      draw();
+    }
+
+    function fixShape() {
+      current.shape.forEach((row, dy) => {
+        row.forEach((val, dx) => {
+          if (val) grid[current.y + dy][current.x + dx] = current.color;
+        });
+      });
+    }
+
+    function clearFullRows() {
+      grid = grid.filter(row => row.some(cell => !cell));
+      while (grid.length < rows) grid.unshift(Array(cols).fill(0));
+    }
+
+    function spawnNewShape() {
+      return {
+        shape: shapes[Math.floor(Math.random() * shapes.length)],
+        color: Math.floor(Math.random() * (colors.length - 1)) + 1,
+        x: 3,
+        y: 0
+      };
+    }
+
+    function collides(x, y, shape) {
+      return shape.some((row, dy) => row.some((val, dx) => {
+        let nx = x + dx, ny = y + dy;
+        return val && (nx < 0 || nx >= cols || ny >= rows || grid[ny][nx]);
+      }));
+    }
+
+    function rotateShape() {
+      const rotated = current.shape[0].map((_, i) => current.shape.map(row => row[i]).reverse());
+      if (!collides(current.x, current.y, rotated)) current.shape = rotated;
+      draw();
+    }
+
+    function moveLeft() {
+      if (!collides(current.x - 1, current.y, current.shape)) current.x--;
+      draw();
+    }
+
+    function moveRight() {
+      if (!collides(current.x + 1, current.y, current.shape)) current.x++;
+      draw();
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") moveLeft();
+      if (e.key === "ArrowRight") moveRight();
+      if (e.key === "ArrowDown") moveDown();
+    });
+
+    const gameLoop = setInterval(moveDown, 700);
+    draw();
+  </script>
+</body>
+</html>

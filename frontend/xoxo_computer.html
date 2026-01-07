@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <title>XOXO - Play With Computer</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: url('bg.jpg') center/cover fixed no-repeat;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 3em;
+      margin-top: 30px;
+      color: #00ffff;
+      text-shadow: 0 0 10px cyan;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 40px;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 10px;
+      margin: 40px auto 20px;
+      justify-content: center;
+    }
+
+    .grid-item {
+      width: 100px;
+      height: 100px;
+      font-size: 2.5em;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 2px solid #00f0ff;
+      color: white;
+      text-align: center;
+      line-height: 100px;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .grid-item:hover {
+      background-color: #00f0ff;
+      color: black;
+      box-shadow: 0 0 15px #00f0ff;
+    }
+
+    .winner-msg {
+      text-align: center;
+      font-size: 2.2em;
+      margin: 15px 0;
+      font-weight: bold;
+      color: #00ff99;
+      text-shadow: 0 0 20px #00ff99;
+      animation: pop 1s ease-in-out forwards;
+      min-height: 60px;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      50% { transform: scale(1.1); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+
+    .button-group {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .btn {
+      background-color: #000;
+      color: white;
+      border: 2px solid #00f0ff;
+      padding: 12px 25px;
+      font-size: 1.2em;
+      border-radius: 12px;
+      cursor: pointer;
+      margin: 10px;
+      transition: 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      background-color: #00f0ff;
+      color: black;
+      box-shadow: 0 0 20px #00f0ff;
+    }
+
+    footer {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      font-size: 1em;
+      border-top: 4px solid #00f0ff;
+      color: #b3ffff;
+      text-align: center;
+    }
+
+    footer a {
+      color: #66ffff;
+      margin: 0 8px;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: cyan;
+    }
+
+    @media screen and (max-width: 600px) {
+      .grid-container {
+        grid-template-columns: repeat(3, 80px);
+        gap: 8px;
+      }
+
+      .grid-item {
+        width: 80px;
+        height: 80px;
+        font-size: 2em;
+        line-height: 80px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      .btn {
+        font-size: 1em;
+        padding: 10px 20px;
+      }
+
+      .winner-msg {
+        font-size: 1.8em;
+      }
+
+      footer {
+        font-size: 0.9em;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>🤖 XOXO - Play With Computer</h1>
+
+  <main>
+    <div class="grid-container" id="gameGrid">
+      <div class="grid-item" onclick="playerMove(this)"></div>
+      <div class="grid-item" onclick="playerMove(this)"></div>
+      <div class="grid-item" onclick="playerMove(this)"></div>
+      <div class="grid-item" onclick="playerMove(this)"></div>
+      <div class="grid-item" onclick="playerMove(this)"></div>
+      <div class="grid-item" onclick="playerMove(this)"></div>
+      <div class="grid-item" onclick="playerMove(this)"></div>
+      <div class="grid-item" onclick="playerMove(this)"></div>
+      <div class="grid-item" onclick="playerMove(this)"></div>
+    </div>
+
+    <div id="winner" class="winner-msg"></div>
+
+    <div class="button-group">
+      <button class="btn" id="restartButton" style="display: none;" onclick="restartGame()">🔁 Play Again</button>
+      <a href="xoxo_choice.html" class="btn">🧩 Go to Menu</a>
+      <a href="2_index.html" class="btn">🏠 Back to Home</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Created by Nishant Saini |
+      <a href="https://www.instagram.com/nishantt_sainii/" target="_blank">Instagram</a> |
+      <a href="https://www.linkedin.com/in/nishant-saini-6a695b322/" target="_blank">LinkedIn</a> |
+      <a href="tel:+919625700719">📞 9625700719</a>
+    </p>
+    <p>&copy; 2025 Saini Games Hub</p>
+  </footer>
+
+  <script>
+    let flag = 0; // 0 = Player, 1 = Computer
+    let count = 0;
+    const buttons = document.querySelectorAll('.grid-item');
+
+    function playerMove(button) {
+      if (flag === 1 || button.innerText !== '') return;
+
+      button.innerText = 'X';
+      flag = 1;
+      count++;
+
+      if (count >= 5 && checkWinner('X')) {
+        showWinner("🏆 X WON!");
+        return;
+      }
+
+      if (count < 9) {
+        setTimeout(computerMove, 500);
+      } else {
+        showWinner("🤝 It's a Draw!");
+      }
+    }
+
+    function computerMove() {
+      let move = findBestMove('O') || findBestMove('X');
+
+      if (!move) {
+        let available = [...buttons].filter(btn => btn.innerText === '');
+        if (available.length === 0) return;
+        move = available[Math.floor(Math.random() * available.length)];
+      }
+
+      move.innerText = 'O';
+      count++;
+
+      if (count >= 5 && checkWinner('O')) {
+        showWinner("🤖 O WON!");
+        return;
+      }
+
+      if (count === 9) {
+        showWinner("🤝 It's a Draw!");
+      }
+
+      flag = 0;
+    }
+
+    function findBestMove(symbol) {
+      const winPatterns = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+
+      for (const pattern of winPatterns) {
+        const [a, b, c] = pattern;
+        if (buttons[a].innerText === symbol && buttons[b].innerText === symbol && buttons[c].innerText === '')
+          return buttons[c];
+        if (buttons[a].innerText === symbol && buttons[c].innerText === symbol && buttons[b].innerText === '')
+          return buttons[b];
+        if (buttons[b].innerText === symbol && buttons[c].innerText === symbol && buttons[a].innerText === '')
+          return buttons[a];
+      }
+      return null;
+    }
+
+    function checkWinner(symbol) {
+      const winPatterns = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+
+      return winPatterns.some(pattern => {
+        const [a, b, c] = pattern;
+        return buttons[a].innerText === symbol &&
+               buttons[b].innerText === symbol &&
+               buttons[c].innerText === symbol;
+      });
+    }
+
+    function showWinner(text) {
+      document.getElementById('winner').innerText = text;
+      disableBoard();
+      document.getElementById('restartButton').style.display = 'inline-block';
+    }
+
+    function disableBoard() {
+      buttons.forEach(btn => btn.onclick = null);
+    }
+
+    function restartGame() {
+      buttons.forEach(button => {
+        button.innerText = '';
+        button.onclick = function () { playerMove(this); };
+      });
+      count = 0;
+      flag = 0;
+      document.getElementById('winner').innerText = '';
+      document.getElementById('restartButton').style.display = 'none';
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <title>Level 1 - Sort Water</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('bg.jpg') center/cover fixed no-repeat;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      text-align: center;
+      animation: bgWave 15s linear infinite;
+    }
+
+    @keyframes bgWave {
+      0% { background-position: 50% 50%; }
+      50% { background-position: 48% 52%; }
+      100% { background-position: 50% 50%; }
+    }
+
+    header {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 15px;
+      font-size: 1.5em;
+      text-shadow: 0 0 10px cyan;
+    }
+
+    .game-area {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .tube {
+      width: 50px;
+      height: 160px;
+      border: 4px solid white;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column-reverse;
+      justify-content: flex-start;
+      overflow: hidden;
+      cursor: pointer;
+      transition: 0.3s ease;
+      position: relative;
+      background-color: rgba(255, 255, 255, 0.1);
+      flex: 1 1 80px;
+      max-width: 80px;
+    }
+
+    .tube.selected {
+      transform: scale(1.2);
+      border-color: #00ffff;
+      box-shadow: 0 0 15px #00ffff;
+      z-index: 1;
+    }
+
+    .color-block {
+      width: 100%;
+      height: 25%;
+      transition: all 0.4s ease;
+    }
+
+    .controls {
+      margin: 10px auto;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .controls button {
+      padding: 10px 18px;
+      background: #5ce1e6;
+      border: none;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 8px white;
+    }
+
+    .controls button:hover {
+      background: #a3ffff;
+      color: black;
+    }
+
+    footer {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      font-size: 1em;
+      border-top: 5px double #5ce1e6;
+      color: #c1f9ff;
+    }
+
+    footer a {
+      color: #a3ffff;
+      margin: 0 10px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    footer a:hover {
+      color: white;
+      text-shadow: 0 0 8px #5ce1e6;
+    }
+
+    #winMessage {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      color: #00ffea;
+      font-size: 2.5em;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      text-shadow: 0 0 20px cyan;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    #winMessage button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+      background-color: #00ffea;
+      border: none;
+      border-radius: 10px;
+      color: black;
+      cursor: pointer;
+    }
+
+    #winMessage button:hover {
+      background-color: white;
+    }
+
+    @media (max-width: 600px) {
+      .tube {
+        width: 40px;
+        height: 140px;
+        flex: 1 1 60px;
+        max-width: 70px;
+      }
+
+      header {
+        font-size: 1.2em;
+      }
+
+      #winMessage {
+        font-size: 1.6em;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    💧 Sort Water Puzzle - Level 1
+  </header>
+
+  <div class="game-area" id="gameArea"></div>
+
+  <div class="controls">
+    <button onclick="location.href='2_index.html'">🏠 Home</button>
+    <button onclick="location.href='water_level.html'">📋 Levels</button>
+    <button onclick="startLevel()">🔄 Restart</button>
+  </div>
+
+  <footer>
+    <p>Created by Nishant Saini |
+      <a href="https://www.instagram.com/nishantt_sainii/" target="_blank">Instagram</a> |
+      <a href="https://www.linkedin.com/in/nishant-saini-6a695b322/" target="_blank">LinkedIn</a>
+    </p>
+    <p>&copy; 2025 Saini Games Hub</p>
+  </footer>
+
+  <div id="winMessage">
+    🎉 YOU WIN! 🎉
+    <button onclick="location.href='water_2.html'">➡️ Next Level</button>
+  </div>
+
+  <script>
+    let tubeData = [];
+    let selectedTube = null;
+
+    function createTube(colors, index) {
+      const tube = document.createElement('div');
+      tube.className = 'tube';
+      tube.dataset.index = index;
+
+      colors.forEach(color => {
+        const block = document.createElement('div');
+        block.className = 'color-block';
+        block.style.background = color;
+        tube.appendChild(block);
+      });
+
+      tube.onclick = () => handleTubeClick(index);
+      return tube;
+    }
+
+    function renderTubes() {
+      const gameArea = document.getElementById('gameArea');
+      gameArea.innerHTML = '';
+      tubeData.forEach((colors, index) => {
+        const tube = createTube(colors, index);
+        if (selectedTube === index) tube.classList.add('selected');
+        gameArea.appendChild(tube);
+      });
+    }
+
+    function handleTubeClick(index) {
+      if (selectedTube === null) {
+        if (tubeData[index].length > 0) {
+          selectedTube = index;
+          renderTubes();
+        }
+      } else {
+        if (index !== selectedTube) {
+          const from = tubeData[selectedTube];
+          const to = tubeData[index];
+          if (to.length < 4 && (to.length === 0 || to[to.length - 1] === from[from.length - 1])) {
+            const movedColor = from.pop();
+            renderTubes();
+            setTimeout(() => {
+              to.push(movedColor);
+              selectedTube = null;
+              renderTubes();
+              checkWin();
+            }, 200);
+          } else {
+            selectedTube = null;
+            renderTubes();
+          }
+        } else {
+          selectedTube = null;
+          renderTubes();
+        }
+      }
+    }
+
+    function checkWin() {
+      const win = tubeData.every(tube => {
+        return tube.length === 0 || (tube.length === 4 && new Set(tube).size === 1);
+      });
+      if (win) {
+        document.getElementById("winMessage").style.display = "flex";
+      }
+    }
+
+    function startLevel() {
+      selectedTube = null;
+      tubeData = [
+        ['red', 'red', 'blue', 'blue'],
+        ['blue', 'yellow', 'yellow', 'red'],
+        ['yellow', 'blue', 'yellow', 'red'],
+        []
+      ];
+      document.getElementById("winMessage").style.display = "none";
+      renderTubes();
+    }
+
+    window.onload = startLevel;
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="logo.png" />
+
+  <title>Level 8 - Sort Water</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('bg.jpg') center/cover fixed no-repeat;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      text-align: center;
+      animation: bgWave 15s linear infinite;
+    }
+
+    @keyframes bgWave {
+      0% { background-position: 50% 50%; }
+      50% { background-position: 48% 52%; }
+      100% { background-position: 50% 50%; }
+    }
+
+    header {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      font-size: 1.5em;
+      text-shadow: 0 0 10px cyan;
+    }
+
+    .game-area {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      padding: 30px;
+    }
+
+    .tube {
+      width: 60px;
+      height: 200px;
+      border: 4px solid white;
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column-reverse;
+      justify-content: flex-start;
+      overflow: hidden;
+      cursor: pointer;
+      transition: 0.3s;
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .tube.selected {
+      transform: scale(1.2);
+      border-color: #00ffff;
+      box-shadow: 0 0 10px #00ffff;
+    }
+
+    .color-block {
+      width: 100%;
+      height: 25%;
+      transition: all 0.3s;
+    }
+
+    .controls {
+      margin: 15px auto;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .controls button {
+      padding: 10px 20px;
+      background: #5ce1e6;
+      border: none;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 8px white;
+    }
+
+    .controls button:hover {
+      background: #a3ffff;
+      color: black;
+    }
+
+    #winMessage {
+      font-size: 2em;
+      color: #00ffcc;
+      margin-top: 20px;
+      display: none;
+      animation: flash 1s infinite alternate;
+    }
+
+    #winMessage button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #00ffcc;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #winMessage button:hover {
+      background-color: white;
+      color: black;
+    }
+
+    @keyframes flash {
+      from { text-shadow: 0 0 10px #00ffff; }
+      to { text-shadow: 0 0 20px #00ffcc, 0 0 30px white; }
+    }
+
+    footer {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 30px 20px;
+      font-size: 1em;
+      border-top: 5px double #5ce1e6;
+      color: #c1f9ff;
+      text-align: center;
+    }
+
+    footer a {
+      color: #a3ffff;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header>💧 Sort Water Puzzle - Level 8</header>
+
+  <div class="game-area" id="gameArea"></div>
+
+  <div class="controls">
+    <button onclick="location.href='2_index.html'">🏠 Home</button>
+    <button onclick="location.href='water_level.html'">📋 Level Menu</button>
+    <button onclick="startLevel()">🔄 Restart</button>
+  </div>
+
+  <div id="winMessage">
+    🎉 YOU WIN! 🎉<br>
+    <button onclick="location.href='water_9.html'">➡️ Next Level</button>
+  </div>
+
+  <footer>
+    <p>Created by Nishant Saini |
+      <a href="https://www.instagram.com/nishantt_sainii/" target="_blank">Instagram</a> |
+      <a href="https://www.linkedin.com/in/nishant-saini-6a695b322/" target="_blank">LinkedIn</a>
+    </p>
+    <p>&copy; 2025 Saini Games Hub</p>
+  </footer>
+
+  <script>
+    let tubeData = [];
+    let selectedTube = null;
+
+    function createTube(colors, index) {
+      const tube = document.createElement('div');
+      tube.className = 'tube';
+      tube.dataset.index = index;
+
+      colors.forEach(color => {
+        const block = document.createElement('div');
+        block.className = 'color-block';
+        block.style.background = color;
+        tube.appendChild(block);
+      });
+
+      if (selectedTube === index) {
+        tube.classList.add('selected');
+      }
+
+      tube.onclick = () => handleTubeClick(index);
+      return tube;
+    }
+
+    function renderTubes() {
+      const gameArea = document.getElementById('gameArea');
+      gameArea.innerHTML = '';
+      tubeData.forEach((colors, index) => {
+        const tube = createTube(colors, index);
+        gameArea.appendChild(tube);
+      });
+    }
+
+    function handleTubeClick(index) {
+      if (selectedTube === null && tubeData[index].length > 0) {
+        selectedTube = index;
+        renderTubes();
+        return;
+      }
+
+      if (selectedTube !== null && selectedTube !== index) {
+        const from = tubeData[selectedTube];
+        const to = tubeData[index];
+
+        if (from.length === 0) {
+          selectedTube = null;
+          return;
+        }
+
+        const movingColor = from[from.length - 1];
+        let count = 0;
+
+        for (let i = from.length - 1; i >= 0 && from[i] === movingColor; i--) {
+          count++;
+        }
+
+        const space = 4 - to.length;
+
+        if (space > 0 && (to.length === 0 || to[to.length - 1] === movingColor)) {
+          const moveCount = Math.min(count, space);
+          const movingBlocks = [];
+
+          for (let i = 0; i < moveCount; i++) {
+            movingBlocks.push(from.pop());
+          }
+
+          renderTubes();
+
+          setTimeout(() => {
+            for (let i = 0; i < movingBlocks.length; i++) {
+              to.push(movingBlocks[i]);
+            }
+            selectedTube = null;
+            renderTubes();
+            checkWin();
+          }, 200);
+        } else {
+          selectedTube = null;
+          renderTubes();
+        }
+      } else {
+        selectedTube = null;
+        renderTubes();
+      }
+    }
+
+    function checkWin() {
+      const win = tubeData.every(tube => {
+        if (tube.length === 0) return true;
+        if (tube.length !== 4) return false;
+        return tube.every(color => color === tube[0]);
+      });
+
+      if (win) {
+        document.getElementById('winMessage').style.display = 'block';
+      }
+    }
+
+    function startLevel() {
+      selectedTube = null;
+      tubeData = [
+        ['red', 'blue', 'green', 'yellow'],
+        ['yellow', 'green', 'red', 'blue'],
+        ['blue', 'yellow', 'green', 'red'],
+        ['green', 'red', 'blue', 'yellow'],
+        [],
+        []
+      ];
+      document.getElementById('winMessage').style.display = 'none';
+      renderTubes();
+    }
+
+    window.onload = startLevel;
+  </script>
+</body>
+</html>

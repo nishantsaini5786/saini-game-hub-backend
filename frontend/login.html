@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | Saini Game Hub</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="auth-box">
+  <h2>🎮 Login</h2>
+
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Enter Gmail" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+  </form>
+
+  <p>New here? <a href="register.html">Create Account</a></p>
+  <p id="message" style="color:red;margin-top:10px;"></p>
+</div>
+
+<script>
+const BACKEND_URL = "https://saini-game-hub-backend.onrender.com";
+
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const messageBox = document.getElementById("message");
+  messageBox.textContent = "";
+
+  const formData = {
+    email: document.getElementById("email").value.trim(),
+    password: document.getElementById("password").value
+  };
+
+  try {
+    const response = await fetch(`${BACKEND_URL}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify(formData)
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      alert("✅ Login successful!");
+      window.location.href = "2_index.html";
+    } else {
+      messageBox.textContent = data.error || data.message || "Login failed";
+    }
+
+  } catch (err) {
+    console.error(err);
+    messageBox.textContent = "❌ Server error. Please try again.";
+  }
+});
+</script>
+
+</body>
+</html>

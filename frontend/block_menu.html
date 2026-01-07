@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" type="image/png" href="logo.png" />
+
+  <title>Block Game - Choose Mode</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('bg.jpg') center/cover fixed no-repeat;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      animation: waveBG 15s infinite linear;
+      background-size: 110%;
+      overflow-x: hidden;
+    }
+
+    @keyframes waveBG {
+      0% { background-position: 50% 50%; }
+      50% { background-position: 48% 52%; }
+      100% { background-position: 50% 50%; }
+    }
+
+    header {
+      padding: 30px;
+      text-align: center;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-bottom: 3px solid #00ccff;
+    }
+
+    header h1 {
+      font-size: 2.5em;
+      background: linear-gradient(45deg, #00ffff, #ff00cc);
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #00ccff; }
+      to { text-shadow: 0 0 25px #ff00ff; }
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .option-box {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 20px 30px;
+      border-radius: 15px;
+      margin: 15px;
+      font-size: 1.5em;
+      color: white;
+      text-decoration: none;
+      border: 2px solid #ff00cc;
+      transition: 0.3s ease;
+      box-shadow: 0 0 10px #00ccff;
+    }
+
+    .option-box:hover {
+      background-color: #00ccff;
+      color: black;
+      box-shadow: 0 0 15px #ff00ff;
+      transform: scale(1.05);
+    }
+
+    .back-btn {
+      margin-top: 30px;
+    }
+
+    .back-btn a {
+      background-color: #222;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 1.1em;
+      transition: 0.3s ease;
+    }
+
+    .back-btn a:hover {
+      background-color: #ff0080;
+      color: black;
+      box-shadow: 0 0 10px #ff0080;
+    }
+
+    footer {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      text-align: center;
+      font-size: 1em;
+      color: #ccc;
+      border-top: 3px solid #00ccff;
+    }
+
+    footer a {
+      color: #ff66ff;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: cyan;
+      text-shadow: 0 0 5px white;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🧱 Block Game - Select Mode</h1>
+  </header>
+
+  <main>
+    <a href="classic_block.html" class="option-box">🎮 Classic Control Mode</a>
+    <a href="fixed_block.html" class="option-box">🧊 No Control Fixed Mode</a>
+
+    <div class="back-btn">
+      <a href="block.html">⬅️ Back to Block Menu</a>
+      <a href="2_index.html" style="margin-left: 20px;">🏠 Home</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>Created by Nishant Saini |
+      <a href="https://www.instagram.com/nishantt_sainii" target="_blank">Instagram</a> |
+      <a href="https://www.linkedin.com/in/nishant-saini-6a695b322/" target="_blank">LinkedIn</a> |
+      <a href="tel:+919625700719">📞 9625700719</a>
+    </p>
+    <p>&copy; 2025 Saini Games Hub</p>
+  </footer>
+
+</body>
+</html>
