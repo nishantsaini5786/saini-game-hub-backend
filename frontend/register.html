@@ -22,8 +22,9 @@
   <p>Already a player? <a href="login.html">Login</a></p>
   <p id="message" style="color:red;margin-top:10px;"></p>
 </div>
- 
+
 <script>
+// Always use full backend URL
 const BACKEND_URL = "https://saini-game-hub-backend.onrender.com";
 
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
@@ -43,24 +44,24 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
   try {
     const response = await fetch(`${BACKEND_URL}/register`, {
       method: "POST",
+      credentials: "include",  // 🔥 REQUIRED FOR COOKIES
       headers: {
         "Content-Type": "application/json"
       },
-      credentials: "include",   // 🔥 VERY IMPORTANT
       body: JSON.stringify(formData)
     });
 
     const data = await response.json();
 
     if (response.ok && data.success) {
-      alert("✅ Registration successful!");
+      alert("🎉 Registration successful!");
       window.location.href = "login.html";
     } else {
-      messageBox.textContent = data.error || data.message || "Registration failed";
+      messageBox.textContent = data.error || "Registration failed";
     }
 
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error("Error:", error);
     messageBox.textContent = "❌ Server error. Try again later.";
   }
 });

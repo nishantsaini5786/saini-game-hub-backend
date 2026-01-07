@@ -23,54 +23,38 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Required for Render cookies
+// For Render cookies
 app.set("trust proxy", 1);
 
 // ======================
-// 3️⃣ CORS (Final)
+// 3️⃣ CORS
 // ======================
+const allowedOrigins = [
+  "https://sainigamehub-db.netlify.app",
+  "http://127.0.0.1:5500",
+  "http://localhost:3000",
+];
+
 app.use(
   cors({
-    origin: function (origin, callback) {
-      const allowedOrigins = [
-        "https://sainigamehub-db.netlify.app",
-        "http://localhost:3000",
-        "http://127.0.0.1:5500",
-      ];
-
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS Blocked: " + origin));
-      }
-    },
+    origin: allowedOrigins,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"],
   })
 );
 
-// OPTIONS preflight fix
-app.use((req, res, next) => {
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Origin", req.headers.origin || "*");
-    res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    res.header("Access-Control-Allow-Credentials", "true");
-    return res.sendStatus(200);
-  }
-  next();
-});
+app.options("*", cors());
 
 // ======================
-// 4️⃣ Test route
+// 4️⃣ Test Route
 // ======================
 app.get("/", (req, res) => {
   res.send("Backend is running 🚀");
 });
 
 // ======================
-// 5️⃣ MongoDB connection
+// 5️⃣ MongoDB
 // ======================
 mongoose
   .connect(process.env.MONGODB_URI)
@@ -99,9 +83,15 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 
 // ======================
-// 8️⃣ Multer Uploads (Profile Images)
+// 8️⃣ Uploads Folder Fix (IMPORTANT)
 // ======================
-const uploadDir = path.join(__dirname, "uploads/profiles");
+// Structure:
+// root
+// ├── backend
+// └── uploads  ← outside backend
+
+const uploadDir = path.join(__dirname, "../uploads/profiles");
+
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
 const storage = multer.diskStorage({
@@ -112,11 +102,21 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Serve uploaded images
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Static folder serving
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // ======================
-// 9️⃣ Register User
+// 9️⃣ Cookie Config
+// ======================
+const cookieConfig = {
+  httpOnly: true,
+  secure: true,
+  sameSite: "none",
+  maxAge: 24 * 60 * 60 * 1000,
+};
+
+// ======================
+// 🔟 Register User
 // ======================
 app.post("/register", async (req, res) => {
   try {
@@ -147,22 +147,18 @@ app.post("/register", async (req, res) => {
     res.cookie(
       "user",
       JSON.stringify({ id: user._id, username: user.username }),
-      {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        maxAge: 24 * 60 * 60 * 1000,
-      }
+      cookieConfig
     );
 
     res.json({ success: true, message: "Registered successfully" });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Server error" });
   }
 });
 
 // ======================
-// 🔟 Login User
+// 1️⃣1️⃣ Login User
 // ======================
 app.post("/login", async (req, res) => {
   try {
@@ -177,22 +173,18 @@ app.post("/login", async (req, res) => {
     res.cookie(
       "user",
       JSON.stringify({ id: user._id, username: user.username }),
-      {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        maxAge: 24 * 60 * 60 * 1000,
-      }
+      cookieConfig
     );
 
     res.json({ success: true, message: "Login successful" });
-  } catch {
+  } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Server error" });
   }
 });
 
 // ======================
-// 1️⃣1️⃣ Check Auth
+// 1️⃣2️⃣ Check Login
 // ======================
 app.get("/check", (req, res) => {
   try {
@@ -204,7 +196,7 @@ app.get("/check", (req, res) => {
 });
 
 // ======================
-// 1️⃣2️⃣ Start Server
+// 1️⃣3️⃣ Start Server
 // ======================
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);

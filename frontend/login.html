@@ -21,6 +21,7 @@
 </div>
 
 <script>
+// Backend URL (Render)
 const BACKEND_URL = "https://saini-game-hub-backend.onrender.com";
 
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
@@ -29,32 +30,36 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   const messageBox = document.getElementById("message");
   messageBox.textContent = "";
 
-  const formData = {
-    email: document.getElementById("email").value.trim(),
-    password: document.getElementById("password").value
-  };
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  // Basic frontend validation
+  if (!email.endsWith("@gmail.com")) {
+    messageBox.textContent = "Only Gmail allowed!";
+    return;
+  }
 
   try {
     const response = await fetch(`${BACKEND_URL}/login`, {
       method: "POST",
+      credentials: "include",     // 🔥 Must for saving cookies
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      credentials: "include",
-      body: JSON.stringify(formData)
+      body: JSON.stringify({ email, password })
     });
 
     const data = await response.json();
 
     if (response.ok && data.success) {
-      alert("✅ Login successful!");
-      window.location.href = "2_index.html";
+      alert("🎉 Login successful!");
+      window.location.href = "2_index.html";   // Redirect
     } else {
-      messageBox.textContent = data.error || data.message || "Login failed";
+      messageBox.textContent = data.error || "Login failed";
     }
 
   } catch (err) {
-    console.error(err);
+    console.error("Error:", err);
     messageBox.textContent = "❌ Server error. Please try again.";
   }
 });
