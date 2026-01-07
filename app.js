@@ -31,11 +31,19 @@ app.set("trust proxy", 1);
 // ======================
 app.use(
   cors({
-    origin: [
-      "https://sainigamehub-db.netlify.app",
-      "http://localhost:3000",
-      "http://127.0.0.1:5500",
-    ],
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "https://sainigamehub-db.netlify.app",
+        "http://localhost:3000",
+        "http://127.0.0.1:5500",
+      ];
+
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS Blocked: " + origin));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
